@@ -1,0 +1,65 @@
+//Создаем карту
+urlLoaderMap.data.position=0;//maps_ref.fileList[i].data.position=0;
+var map_size:int=urlLoaderMap.data.readInt();
+var gor:int=new int  ;
+var vert:int=new int  ;
+var cell:Array=new Array  ;
+var map:Sprite=new Sprite();
+var map_units:Sprite=new Sprite  ;
+var map_place:Sprite=new Sprite  ;
+
+for (gor = 0; gor<map_size; gor++) {
+	cell[gor]=new Array  ;
+	for (vert = 0; vert<map_size; vert++) {
+		cell[gor][vert] = new Array(
+		"type",
+		"visibilty",//используется, чтобы определить сканирует ли эту клетку игрок.
+		"source_t",
+		"source_n"
+		);
+		cell[gor][vert]["type"]=urlLoaderMap.data.readUTF();
+		if (cell[gor][vert]["type"]=="green") {
+			map.graphics.beginBitmapFill(green_dark);
+			map_units.graphics.beginBitmapFill(green);
+		} else if (cell[gor][vert]["type"]=="water") {
+			map.graphics.beginBitmapFill(water_dark);
+			map_units.graphics.beginBitmapFill(water);
+		} else if (cell[gor][vert]["type"]=="montain") {
+			map.graphics.beginBitmapFill(montain_dark);
+			map_units.graphics.beginBitmapFill(montain);
+		}
+		map.graphics.drawRect(cell_size*gor, cell_size*vert, cell_size, cell_size);
+		map.graphics.endFill();
+		map_units.graphics.drawRect(cell_size*gor, cell_size*vert, cell_size, cell_size);		
+		map_units.graphics.endFill();
+	}
+}
+addChild(map_place);
+map_place.addChild(map);
+map.addChild(map_units);
+map_place.x=map_x;
+map_place.scrollRect=map_rect;
+//Конец создания карты
+
+//Меняю курсор только для карты
+var mc:Sprite=new cursor_class  ;
+mc.mouseEnabled=false;
+map_place.addEventListener(MouseEvent.MOUSE_OVER, cursor_add);
+function cursor_add(event:MouseEvent) {
+	Mouse.hide();
+	addChild(mc);
+	mc.x=event.stageX;
+	mc.y=event.stageY;
+	map_place.addEventListener(MouseEvent.MOUSE_MOVE, cursor_move);
+	map_place.addEventListener(MouseEvent.MOUSE_OUT, cursor_del);
+}
+function cursor_move(event:MouseEvent) {
+	mc.x=event.stageX;
+	mc.y=event.stageY;
+}
+function cursor_del(event:MouseEvent) {
+	Mouse.show();
+	removeChild(mc);
+	map_place.removeEventListener(MouseEvent.MOUSE_MOVE, cursor_move);
+	map_place.removeEventListener(MouseEvent.MOUSE_OUT, cursor_del);
+}
