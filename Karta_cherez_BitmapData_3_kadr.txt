@@ -8,30 +8,66 @@ var map:Sprite=new Sprite();
 var map_units:Sprite=new Sprite  ;
 var map_place:Sprite=new Sprite  ;
 
+//Функция оптимизирующая затраты на графическую визуализацию
+var gor_start:int=new int  ;
+var vert_start:int=new int  ;
+var gor_length:int=new int  ;
+var vert_length:int=new int  ;
 for (gor = 0; gor<map_size; gor++) {
 	cell[gor]=new Array  ;
 	for (vert = 0; vert<map_size; vert++) {
 		cell[gor][vert] = new Array(
 		"type",
-		"visibilty",//используется, чтобы определить сканирует ли эту клетку игрок.
+		"optimize",
 		"source_t",
 		"source_n"
 		);
 		cell[gor][vert]["type"]=maps_ref.fileList[i].data.readUTF();
-		if (cell[gor][vert]["type"]=="green") {
-			map.graphics.beginBitmapFill(green_dark);
-			map_units.graphics.beginBitmapFill(green);
-		} else if (cell[gor][vert]["type"]=="water") {
-			map.graphics.beginBitmapFill(water_dark);
-			map_units.graphics.beginBitmapFill(water);
-		} else if (cell[gor][vert]["type"]=="montain") {
-			map.graphics.beginBitmapFill(montain_dark);
-			map_units.graphics.beginBitmapFill(montain);
+		cell[gor][vert]["optimize"]=0;
+	}
+}
+for (gor = 0; gor<map_size; gor++) {
+	gor_start=gor;
+	for (vert = 0; vert<map_size; vert++) {
+		gor_length=1;
+		vert_start=vert;
+		vert_length=1;
+		if (cell[gor][vert]["optimize"]!=1) {
+			cell[gor][vert]["optimize"]=1;
+			while (vert<map_size-1&&cell[gor][vert]["type"]==cell[gor][vert+1]["type"]&&cell[gor][vert+1]["optimize"]!=1) {
+				vert_length+=1;
+				vert+=1;
+				cell[gor][vert]["optimize"]=1;
+			}
+			vert=vert_start;
+			while (gor<map_size-1&&cell[gor][vert]["type"]==cell[gor+1][vert]["type"]&&vert_start+vert_length>vert) {
+				vert+=1;
+				if (vert_start+vert_length==vert) {
+					gor_length+=1;
+					gor+=1;
+					for (vert = vert_start; vert_start+vert_length>vert; vert++) {
+						cell[gor][vert]["optimize"]=1;
+					}
+					vert=vert_start;
+				}
+			}			
+			if (cell[gor_start][vert_start]["type"]=="green") {
+				map.graphics.beginBitmapFill(green_dark);
+				map_units.graphics.beginBitmapFill(green);				
+			} else if (cell[gor_start][vert_start]["type"]=="water") {
+				map.graphics.beginBitmapFill(water_dark);
+				map_units.graphics.beginBitmapFill(water);				
+			} else if (cell[gor_start][vert_start]["type"]=="montain") {
+				map.graphics.beginBitmapFill(montain_dark);
+				map_units.graphics.beginBitmapFill(montain);				
+			}			
+			map.graphics.drawRect(gor_start*cell_pixels, vert_start*cell_pixels, cell_pixels*gor_length, cell_pixels*vert_length);
+			map.graphics.endFill();
+			map_units.graphics.drawRect(gor_start*cell_pixels, vert_start*cell_pixels, cell_pixels*gor_length, cell_pixels*vert_length);
+			map_units.graphics.endFill();			
+			vert=vert_start+vert_length-1;
+			gor=gor_start;
 		}
-		map.graphics.drawRect(cell_size*gor, cell_size*vert, cell_size, cell_size);
-		map.graphics.endFill();
-		map_units.graphics.drawRect(cell_size*gor, cell_size*vert, cell_size, cell_size);		
-		map_units.graphics.endFill();
 	}
 }
 addChild(map_place);
