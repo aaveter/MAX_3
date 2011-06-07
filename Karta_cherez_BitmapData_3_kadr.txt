@@ -1,6 +1,6 @@
 //Создаем карту
-maps_ref.fileList[i].data.position=0;
-var map_size:int=maps_ref.fileList[i].data.readInt();
+urlLoaderMap.data.position=0;//maps_ref.fileList[i].data.position=0;
+var map_size:int=urlLoaderMap.data.readInt();
 var gor:int=new int  ;
 var vert:int=new int  ;
 var cell:Array=new Array  ;
@@ -17,7 +17,7 @@ for (gor = 0; gor<map_size; gor++) {
 		"source_t",
 		"source_n"
 		);
-		cell[gor][vert]["type"]=maps_ref.fileList[i].data.readUTF();
+		cell[gor][vert]["type"]=urlLoaderMap.data.readUTF();
 		if (cell[gor][vert]["type"]=="green") {
 			map.graphics.beginBitmapFill(green_dark);
 			map_units.graphics.beginBitmapFill(green);
