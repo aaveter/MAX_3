@@ -1,3 +1,4 @@
+//
 //Создаем карту
 urlLoaderMap[i].data.position=0;
 var map_size:int=urlLoaderMap[i].data.readInt();
