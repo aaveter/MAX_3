@@ -1,6 +1,6 @@
 //Создаем карту
-urlLoaderMap.data.position=0;//maps_ref.fileList[i].data.position=0;
-var map_size:int=urlLoaderMap.data.readInt();
+urlLoaderMap[i].data.position=0;
+var map_size:int=urlLoaderMap[i].data.readInt();
 var gor:int=new int  ;
 var vert:int=new int  ;
 var cell:Array=new Array  ;
@@ -22,7 +22,7 @@ for (gor = 0; gor<map_size; gor++) {
 		"source_t",
 		"source_n"
 		);
-		cell[gor][vert]["type"]=urlLoaderMap.data.readUTF();
+		cell[gor][vert]["type"]=urlLoaderMap[i].data.readUTF();
 		cell[gor][vert]["optimize"]=0;
 	}
 }

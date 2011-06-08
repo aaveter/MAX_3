@@ -5,77 +5,93 @@ var map_size_text:Array=new Array  ;
 var mst_format:TextFormat = new TextFormat();
 var maps_ref:FileReferenceList=new FileReferenceList();
 var i:int=0;
-var qx:int = Math.floor((doc_x-20)/(map_x+mmd));// оличество мини-карт которое помещаетс€ в кадре
+var qx:int = Math.floor((doc_x-20)/(map_x+mmd));// оличество мини-карт которое помещаетс€ в строке
 var cmm:Sprite=new Sprite  ;//ѕоказывает, что выбрана именно эта карта
 cmm.graphics.lineStyle(2, 0x000099);
 cmm.graphics.drawRect(0, 0, 250, 250);
 
 addChild(mini_maps_place);
 
-var urlRequest:URLRequest = new URLRequest("maps_list.txt");
+var urlRequest:URLRequest=new URLRequest("maps_list.txt");
 var urlLoader:URLLoader = new URLLoader();
-urlLoader.dataFormat = URLLoaderDataFormat.VARIABLES;
+urlLoader.dataFormat=URLLoaderDataFormat.VARIABLES;
 urlLoader.addEventListener(Event.COMPLETE, urlLoader_complete);
 urlLoader.load(urlRequest);
- 
-var mapsCount:int = 0; 
+
+var mapsCount:int=0;
 
 var urlRequestMap:URLRequest;
-var urlLoaderMap:URLLoader;
- 
-function urlLoader_complete(evt:Event):void {
-    //lbl.text = "maps files =";// + urlLoader.data.maps_files;
-	//lbl.appendText( "count = " + urlLoader.data.maps_count );
-	mapsCount = urlLoader.data.maps_count;
-	trace("mapsCount = " + mapsCount.toString());
-	
-	mini_maps_place.addChild(cmm);
-	cmm.x=(map_x+mmd)*(i-qx*Math.floor(i/qx))+20;
-	cmm.y=(map_x+mmd+20)*Math.floor(i/qx)+20
-	
-	urlRequestMap = new URLRequest(urlLoader.data["map" + (i+1).toString()]);
-	urlLoaderMap = new URLLoader();
-	urlLoaderMap.dataFormat = URLLoaderDataFormat.BINARY;
-	urlLoaderMap.addEventListener(Event.COMPLETE, maps_complete);
-	urlLoaderMap.load(urlRequestMap);
-}
+var urlLoaderMap:Array=new Array;
 
-/*maps_ref.browse();
-maps_ref.addEventListener(Event.SELECT, maps_selected);
-function maps_selected(evt:Event):void {
-	mini_maps_place.addChild(cmm);
+function urlLoader_complete(evt:Event):void {
+	mapsCount=urlLoader.data.maps_count;
+	trace("mapsCount = " + mapsCount.toString());
 	cmm.x=(map_x+mmd)*(i-qx*Math.floor(i/qx))+20;
 	cmm.y=(map_x+mmd+20)*Math.floor(i/qx)+20;
-	maps_ref.fileList[i].addEventListener(Event.COMPLETE, maps_complete);
-	maps_ref.fileList[i].load();
-}*/
-
-
-
-
-
-//maps_ref.fileList[i].addEventListener(Event.COMPLETE, maps_complete);
-//maps_ref.fileList[i].load();
+	urlRequestMap = new URLRequest(urlLoader.data["map" + (i+1).toString()]);
+	urlLoaderMap[i] = new URLLoader();
+	urlLoaderMap[i].dataFormat=URLLoaderDataFormat.BINARY;
+	urlLoaderMap[i].addEventListener(Event.COMPLETE, maps_complete);
+	urlLoaderMap[i].load(urlRequestMap);
+}
 
 function maps_complete(evt:Event) {
 	var cell:Array=new Array  ;
-	var map_size:int=urlLoaderMap.data.readInt();
+	var map_size:int=urlLoaderMap[i].data.readInt();
 	mini_maps[i]=new Sprite  ;
-	map_size_text[i]=new TextField  ;
-	for (var gor:int = 0; gor<map_size; gor++) {
+	map_size_text[i]=new TextField  ;	
+	var gor_start:int=new int  ;
+	var vert_start:int=new int  ;
+	var gor_length:int=new int  ;
+	var vert_length:int=new int  ;
+	for (gor = 0; gor<map_size; gor++) {
 		cell[gor]=new Array  ;
-		for (var vert:int = 0; vert<map_size; vert++) {
-			cell[gor][vert]=urlLoaderMap.data.readUTF();
-			//trace(i,maps_ref.fileList[i].data.position);			
-			if (cell[gor][vert]=="green") {
-				mini_maps[i].graphics.beginBitmapFill(mini_green);
-			} else if (cell[gor][vert]=="water") {
-				mini_maps[i].graphics.beginBitmapFill(mini_water);
-			} else if (cell[gor][vert]=="montain") {
-				mini_maps[i].graphics.beginBitmapFill(mini_montain);
+		for (vert = 0; vert<map_size; vert++) {
+			cell[gor][vert] = new Array(
+			"type",
+			"optimize"
+			);
+			cell[gor][vert]["type"]=urlLoaderMap[i].data.readUTF();
+			cell[gor][vert]["optimize"]=0;
+		}
+	}
+	for (gor = 0; gor<map_size; gor++) {
+		gor_start=gor;
+		for (vert = 0; vert<map_size; vert++) {
+			gor_length=1;
+			vert_start=vert;
+			vert_length=1;
+			if (cell[gor][vert]["optimize"]!=1) {
+				cell[gor][vert]["optimize"]=1;
+				while (vert<map_size-1&&cell[gor][vert]["type"]==cell[gor][vert+1]["type"]&&cell[gor][vert+1]["optimize"]!=1) {
+					vert_length+=1;
+					vert+=1;
+					cell[gor][vert]["optimize"]=1;
+				}
+				vert=vert_start;
+				while (gor<map_size-1&&cell[gor][vert]["type"]==cell[gor+1][vert]["type"]&&vert_start+vert_length>vert) {
+					vert+=1;
+					if (vert_start+vert_length==vert) {
+						gor_length+=1;
+						gor+=1;
+						for (vert = vert_start; vert_start+vert_length>vert; vert++) {
+							cell[gor][vert]["optimize"]=1;
+						}
+						vert=vert_start;
+					}
+				}
+				if (cell[gor_start][vert_start]["type"]=="green") {
+					mini_maps[i].graphics.beginBitmapFill(mini_green);
+				} else if (cell[gor_start][vert_start]["type"]=="water") {
+					mini_maps[i].graphics.beginBitmapFill(mini_water);
+				} else if (cell[gor_start][vert_start]["type"]=="montain") {
+					mini_maps[i].graphics.beginBitmapFill(mini_montain);
+				}
+				mini_maps[i].graphics.drawRect(gor_start*mini_cs,vert_start*mini_cs,mini_cs*gor_length,mini_cs*vert_length);
+				mini_maps[i].graphics.endFill();
+				vert=vert_start+vert_length-1;
+				gor=gor_start;
 			}
-			mini_maps[i].graphics.drawRect(mini_cs*gor, mini_cs*vert, mini_cs, mini_cs);
-			mini_maps[i].graphics.endFill();
 		}
 	}
 	mst_format=STATIC_text;
@@ -89,34 +105,35 @@ function maps_complete(evt:Event) {
 	mini_maps[i].width=map_x;
 	mini_maps[i].height=map_x;
 	mini_maps[i].x=(map_x+mmd)*(i-qx*Math.floor(i/qx))+20;
-	mini_maps[i].y=(map_x+mmd+20)*Math.floor(i/qx)+20;
-	mini_maps[i].addEventListener(MouseEvent.CLICK,mm_click);
-	mini_maps_place.addChild(mini_maps[i]);
-	mini_maps_place.addChild(map_size_text[i]);
+	mini_maps[i].y=(map_x+mmd+20)*Math.floor(i/qx)+20;	
 
 	if (i<mapsCount-1) {
 		i+=1;
 
-	urlRequestMap = new URLRequest(urlLoader.data["map" + (i+1).toString()]);
-	urlLoaderMap = new URLLoader();
-	urlLoaderMap.dataFormat = URLLoaderDataFormat.BINARY;
-	urlLoaderMap.addEventListener(Event.COMPLETE, maps_complete);
-	urlLoaderMap.load(urlRequestMap);
+		urlRequestMap = new URLRequest(urlLoader.data["map" + (i+1).toString()]);
+		urlLoaderMap[i] = new URLLoader();
+		urlLoaderMap[i].dataFormat=URLLoaderDataFormat.BINARY;
+		urlLoaderMap[i].addEventListener(Event.COMPLETE, maps_complete);
+		urlLoaderMap[i].load(urlRequestMap);
 
-		//maps_ref.fileList[i].addEventListener(Event.COMPLETE, maps_complete);
-		//maps_ref.fileList[i].load();
 	} else {
-		i=0;
 		finalize();
 	}
 }
-function mm_click(event:MouseEvent) {
+function mm_click(event:MouseEvent) {	
 	i=Math.floor((mouseX-mini_maps_place.x)/(map_x+mmd))+qx*Math.floor((mouseY-mini_maps_place.y)/(map_x+mmd));
 	cmm.x=(map_x+mmd)*(i-qx*Math.floor(i/qx))+20;
 	cmm.y=(map_x+mmd+20)*Math.floor(i/qx)+20;
 }
 
-function finalize() {	
+function finalize() {
+	for (i=0; i<mini_maps.length; i++) {
+		mini_maps[i].addEventListener(MouseEvent.CLICK,mm_click);
+		mini_maps_place.addChild(mini_maps[i]);
+		mini_maps_place.addChild(map_size_text[i]);
+	}
+	mini_maps_place.addChild(cmm);
+	i=0;
 	var Ok_2=new Ok_class  ;
 	addChild(Ok_2);
 	Ok_2.x=(doc_x-Ok_2.width)/2;
