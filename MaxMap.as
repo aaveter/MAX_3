@@ -1,6 +1,7 @@
 ﻿package  {
 	
 	import MaxMain;
+	import MaxScrollBar;
 	import flash.events.MouseEvent;
 	import flash.display.Sprite;
 	import flash.text.TextField;
@@ -19,17 +20,36 @@
 		var txt_gor:TextField;
 		var txt_vert:TextField;
 		
-		var map:Sprite=new Sprite();
-		var map_units:Sprite=new Sprite  ;
-		var map_place:Sprite=new Sprite  ;
-		
 		var map_rect:Rectangle;//Видимая часть карты
 		//Меняю курсор только для карты
 		var mc:Sprite;
+		
+		var map_size:int;
+		var gor:int;
+		var vert:int;
+		var cell:Array;
+		var map:Sprite;
+		var map_units:Sprite;
+		var map_place:Sprite;
+		
+		//Функция оптимизирующая затраты на графическую визуализацию
+		var gor_start:int=new int  ;
+		var vert_start:int=new int  ;
+		var gor_length:int=new int  ;
+		var vert_length:int=new int  ;
+		
+		var urlLoaderMap:Array;
+		var i:int;
+		
+		var scrollbars:MaxScrollBar;
+		var miniMap:MaxMiniMap;
 				
 		public function MaxMap(main_) {
 			// constructor code
 			main = main_;
+	    }
+			
+		public function init() {
 			zoomIn=new Sprite;
 			zoomOut=new Sprite;
 			main.addChild(zoomIn);
@@ -81,10 +101,87 @@
 			txt_vert.background=true;
 			txt_vert.backgroundColor=0x99FFCC;
 			
+			urlLoaderMap = main.mapChoose.urlLoaderMap;
+			i = main.mapChoose.i;
+			
+			//Создаем карту
+			urlLoaderMap[i].data.position=0;
+			map_size=urlLoaderMap[i].data.readInt();
+			gor=new int  ;
+			vert=new int  ;
+			cell=new Array  ;
+			map=new Sprite();
+			map_units=new Sprite  ;
+			map_place=new Sprite  ;
+			
+			//Функция оптимизирующая затраты на графическую визуализацию
+			gor_start=new int  ;
+			vert_start=new int  ;
+			gor_length=new int  ;
+			vert_length=new int  ;
+			for (gor = 0; gor<map_size; gor++) {
+				cell[gor]=new Array  ;
+				for (vert = 0; vert<map_size; vert++) {
+					cell[gor][vert] = new Array(
+					"type",
+					"optimize",
+					"source_t",
+					"source_n"
+					);
+					cell[gor][vert]["type"]=urlLoaderMap[i].data.readUTF();
+					cell[gor][vert]["optimize"]=0;
+				}
+			}
+			for (gor = 0; gor<map_size; gor++) {
+				gor_start=gor;
+				for (vert = 0; vert<map_size; vert++) {
+					gor_length=1;
+					vert_start=vert;
+					vert_length=1;
+					if (cell[gor][vert]["optimize"]!=1) {
+						cell[gor][vert]["optimize"]=1;
+						while (vert<map_size-1&&cell[gor][vert]["type"]==cell[gor][vert+1]["type"]&&cell[gor][vert+1]["optimize"]!=1) {
+							vert_length+=1;
+							vert+=1;
+							cell[gor][vert]["optimize"]=1;
+						}
+						vert=vert_start;
+						while (gor<map_size-1&&cell[gor][vert]["type"]==cell[gor+1][vert]["type"]&&vert_start+vert_length>vert) {
+							vert+=1;
+							if (vert_start+vert_length==vert) {
+								gor_length+=1;
+								gor+=1;
+								for (vert = vert_start; vert_start+vert_length>vert; vert++) {
+									cell[gor][vert]["optimize"]=1;
+								}
+								vert=vert_start;
+							}
+						}			
+						if (cell[gor_start][vert_start]["type"]=="green") {
+							map.graphics.beginBitmapFill(main.green_dark);
+							map_units.graphics.beginBitmapFill(main.green);				
+						} else if (cell[gor_start][vert_start]["type"]=="water") {
+							map.graphics.beginBitmapFill(main.water_dark);
+							map_units.graphics.beginBitmapFill(main.water);				
+						} else if (cell[gor_start][vert_start]["type"]=="montain") {
+							map.graphics.beginBitmapFill(main.montain_dark);
+							map_units.graphics.beginBitmapFill(main.montain);				
+						}			
+						map.graphics.drawRect(gor_start*main.cell_pixels, vert_start*main.cell_pixels, main.cell_pixels*gor_length, main.cell_pixels*vert_length);
+						map.graphics.endFill();
+						map_units.graphics.drawRect(gor_start*main.cell_pixels, vert_start*main.cell_pixels, main.cell_pixels*gor_length, main.cell_pixels*vert_length);
+						map_units.graphics.endFill();			
+						vert=vert_start+vert_length-1;
+						gor=gor_start;
+					}
+				}
+			}
+			
+			
 			//interval+=txt_gor.height+20;
-			map = new Sprite;
-			map_units = new Sprite;
-			map_place = new Sprite;
+			//map = new Sprite;
+			//map_units = new Sprite;
+			//map_place = new Sprite;
 			map_rect = new Rectangle(0,0,main.visible_map_x,main.visible_map_y);
 			
 			main.addChild(map_place);
@@ -100,22 +197,26 @@
 			
 			map_place.addEventListener(MouseEvent.MOUSE_MOVE,addtext);
 			map_place.addEventListener(MouseEvent.ROLL_OUT,deltext);
+			
+			miniMap = new MaxMiniMap(main);
+			scrollbars = new MaxScrollBar(main);
+			
 		}
 		
 		private function zoom_map() {
 			map_place.scrollRect=map_rect;
-			//mini_map.scaleX=1;
-			//mini_map.scaleY=1;
-			//border_mm.x=map_rect.x*mini_map.width/map.width;
-			//border_mm.y=map_rect.y*mini_map.height/map.height;
-			//bar_box_gor.x=map_rect.x*box_button_gor.width/map.width;
-			//bar_box_vert.y=map_rect.y*box_button_vert.height/map.height;
-			//bar_box_gor.width=visible_map_x*box_button_gor.width/map.width;
-			//bar_box_vert.height=visible_map_y*box_button_vert.height/map.height;
-			//border_mm.width=visible_map_x*mini_map.width/map.width;
-			//border_mm.height=visible_map_y*mini_map.height/map.height;
-			//mini_map.width=map_x;
-			//mini_map.height=map_x;
+			miniMap.mini_map.scaleX=1;
+			miniMap.mini_map.scaleY=1;
+			miniMap.border_mm.x= map_rect.x*miniMap.mini_map.width/map.width;
+			miniMap.border_mm.y= map_rect.y*miniMap.mini_map.height/map.height;
+			scrollbars.bar_box_gor.x= map_rect.x*scrollbars.box_button_gor.width/map.width;
+			scrollbars.bar_box_vert.y= map_rect.y*scrollbars.box_button_vert.height/map.height;
+			scrollbars.bar_box_gor.width=main.visible_map_x*scrollbars.box_button_gor.width/map.width;
+			scrollbars.bar_box_vert.height=main.visible_map_y*scrollbars.box_button_vert.height/map.height;
+			miniMap.border_mm.width=main.visible_map_x*miniMap.mini_map.width/map.width;
+			miniMap.border_mm.height=main.visible_map_y*miniMap.mini_map.height/map.height;
+			miniMap.mini_map.width=main.map_x;
+			miniMap.mini_map.height=main.map_x;
 		}
 		
 		private function minus_map(event:MouseEvent) {

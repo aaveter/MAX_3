@@ -210,6 +210,7 @@
 				mapChoose = new MaxMapChoose(this);
 			} else if (kadr == 2) {
 				map = new MaxMap(this);
+				map.init();
 			}
 		}
 		
