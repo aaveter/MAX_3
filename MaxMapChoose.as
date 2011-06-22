@@ -35,6 +35,7 @@
 		public function MaxMapChoose(main_) {
 			// constructor code
 			main = main_;
+			main.fill_background();
 			
 			//Загружаю все созданные карты
 			mini_maps_place =new Sprite  ;

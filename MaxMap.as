@@ -50,6 +50,7 @@
 	    }
 			
 		public function init() {
+			main.fill_background();
 			zoomIn=new Sprite;
 			zoomOut=new Sprite;
 			main.addChild(zoomIn);

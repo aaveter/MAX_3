@@ -170,17 +170,6 @@
 			var Int:int=40;
 			var ai:int=0;
 			
-			
-			var pole:Sprite = new Sprite();
-			var matr:Matrix = new Matrix(); /// для задания одного из параметров заливки нам понадобиться матрица, тут мы ее создаем
-			matr.createGradientBox(1200, 1000, 90, 0, 0); /// тут мы определям ее размеры, вращение и координаты
-			pole.graphics.lineStyle(2);
-							 /// тип градиента, массивы для цвета, прозрачности, расположения цветов, задание матрицы   
-			pole.graphics.beginGradientFill(GradientType.LINEAR, [0xEEFFEE, 0x669966], [1, 1], [50, 255], matr, SpreadMethod.REFLECT);
-			pole.graphics.drawRect(0,0,1200,1000);
-			pole.graphics.endFill();
-			stage.addChild(pole);
-			
 			//pole.alpha = 30;
 			
 			
@@ -190,6 +179,18 @@
 			//stage.addChild(sp);
 			
 			playersChoose = new MaxPlayersChoose(this);
+		}
+		
+		function fill_background() {
+			var pole:Sprite = new Sprite();
+			var matr:Matrix = new Matrix(); /// для задания одного из параметров заливки нам понадобиться матрица, тут мы ее создаем
+			matr.createGradientBox(1200, 1000, 90, 0, 0); /// тут мы определям ее размеры, вращение и координаты
+			pole.graphics.lineStyle(2);
+							 /// тип градиента, массивы для цвета, прозрачности, расположения цветов, задание матрицы   
+			pole.graphics.beginGradientFill(GradientType.LINEAR, [0x000077, 0x999999], [1, 1], [50, 255], matr, SpreadMethod.REFLECT);
+			pole.graphics.drawRect(0,0,1200,1000);
+			pole.graphics.endFill();
+			stage.addChild(pole);
 		}
 		
 		function addChild(obj){

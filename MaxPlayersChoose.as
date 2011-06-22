@@ -8,6 +8,7 @@
 	import flash.text.TextFormat;
 	import flash.text.TextFieldType;
 	import flash.display.Sprite;
+	import ATextField;
 	
 	public class MaxPlayersChoose {
 
@@ -33,6 +34,8 @@
 		public function MaxPlayersChoose(main_) {
 			// constructor code
 			main = main_;
+			main.fill_background();
+			
 			units = new Array  ;
 			unit = 0;
 			players_units = new Array  ;//Массив всех юнитов, всех игроков
@@ -92,7 +95,8 @@
 						buttons[button_last].gotoAndStop(1);
 						for (player = 1; player<button_last+1; player++) {
 							main.removeChild(players_text[player]);
-							main.removeChild(name_text[player]);
+							//main.removeChild(name_text[player]);
+							name_text[player].removeMe();
 						}
 					}
 					buttons[button_f].gotoAndStop(2);
@@ -109,23 +113,30 @@
 							players_units[player]=new Array  ;
 							players_text[player]=new TextField  ;
 							main.addChild(players_text[player]);
-							players_text[player].border=true;
-							players_text[player].text=String("имя игрока "+player);
+							//players_text[player].border=true;
+							players_text[player].text="";//String("имя игрока "+player);
 							players_text[player].setTextFormat(main.STATIC_text);
 							players_text[player].autoSize=TextFieldAutoSize.LEFT;
 							players_text[player].x=Player_text.x;
-							players_text[player].y=buttons_menu.y+buttons_menu.height+30+(players_text[player].height+10)*(player-1);
+							players_text[player].y=buttons_menu.y+buttons_menu.height+30+(30/*players_text[player].height*/+10)*(player-1);
 		
-							name_text[player]=new TextField  ;
-							main.addChild(name_text[player]);
-							name_text[player].border=true;
+							name_text[player]=new ATextField(Player_text.x,
+																buttons_menu.y
+																+buttons_menu.height+30+
+																(30/*name_text[player].height*/+10)
+																*(player-1),
+																main,
+																String("имя игрока "+player),
+																"", 16);//new TextField  ;
+							//main.addChild(name_text[player]);
+							//name_text[player].border=true;
 							name_text[player].text=String("игрок "+player);
-							name_text[player].setTextFormat(main.INPUT_text);
-							name_text[player].type=TextFieldType.INPUT;
-							name_text[player].width=Player_text.width-players_text[player].width;
-							name_text[player].height=players_text[player].height;
-							name_text[player].x=Player_text.x+players_text[player].width;
-							name_text[player].y=buttons_menu.y+buttons_menu.height+30+(name_text[player].height+10)*(player-1);
+							//name_text[player].setTextFormat(main.INPUT_text);
+							//name_text[player].type=TextFieldType.INPUT;
+							//name_text[player].width=Player_text.width-players_text[player].width;
+							//name_text[player].height=players_text[player].height;
+							//name_text[player].x=Player_text.x+players_text[player].width;
+							//name_text[player].y=buttons_menu.y+buttons_menu.height+30+(name_text[player].height+10)*(player-1);
 						}
 						if (Ok_1==null) {
 							Ok_1=new Ok_class  ;
@@ -133,7 +144,7 @@
 							Ok_1.addEventListener(MouseEvent.CLICK, press_Ok_1);
 						}
 						Ok_1.x=(main.doc_x-Ok_1.width)/2;
-						Ok_1.y=buttons_menu.y+buttons_menu.height+30+(players_text[players.length-1].height+10)*(players.length-1)+50;
+						Ok_1.y=buttons_menu.y+buttons_menu.height+30+(30/*players_text[players.length-1].height*/+10)*(players.length-1)+50;
 						//doc_y-Ok_1.height-100;
 						function press_Ok_1(event:MouseEvent) {
 							for (player = 1; player<players.length; player++) {
