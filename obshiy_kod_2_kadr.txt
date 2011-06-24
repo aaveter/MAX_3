@@ -148,3 +148,4 @@ function press_Ok_2(event:MouseEvent) {
 	}
 	gotoAndStop(3);
 }
+//
