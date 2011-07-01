@@ -23,12 +23,18 @@
 
 		public var doc_x;//Размер документа по x
 		public var doc_y;//Размер документа по y
-		
 
 		public function Game(main)
-		{			
+		{
 			doc_x = main.stageWidth;//Размер документа по x
 			doc_y = main.stageHeight;//Размер документа по y
+		}
+		public function clear_game()
+		{
+			while (numChildren != 0)
+			{
+				removeChildAt(numChildren-1);
+			}
 		}
 	}
 }
