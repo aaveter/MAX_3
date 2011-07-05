@@ -1,12 +1,12 @@
-﻿package  {
+﻿package Andrey {
 	
 	import flash.display.Stage;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.display.Sprite;
-	import MaxPlayersChoose;
-	import MaxMapChoose;
-	import MaxMap;
+	import Andrey.MaxPlayersChoose;
+	import Andrey.MaxMapChoose;
+	import Andrey.MaxMap;
 	import flash.geom.Matrix;
 	import flash.display.GradientType;
 	import flash.display.SpreadMethod;
@@ -118,10 +118,7 @@
 			montain =new montain_class(0,0);//Гора
 			green_dark =new green_dark_class(0,0);//Трава
 			water_dark =new water_dark_class(0,0);//Вода
-			montain_dark =new montain_dark_class(0,0);//Гора
-			mini_green =new mini_green_class(0,0);
-			mini_water =new mini_water_class(0,0);
-			mini_montain =new mini_montain_class(0,0);
+			montain_dark =new montain_dark_class(0,0);//Гора			
 			
 			//Список всех констант для изменения
 			doc_x = stage.stageWidth;//1200;//Размер документа по x

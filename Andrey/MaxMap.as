@@ -1,7 +1,7 @@
-﻿package  {
+﻿package  Andrey{
 	
-	import MaxMain;
-	import MaxScrollBar;
+	import Andrey.MaxMain;
+	import Andrey.MaxScrollBar;
 	import flash.events.MouseEvent;
 	import flash.display.Sprite;
 	import flash.text.TextField;

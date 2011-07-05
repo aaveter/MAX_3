@@ -5,6 +5,7 @@
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.display.Sprite;
+	import flash.display.BitmapData;
 
 	public class Game extends Sprite
 	{
@@ -17,6 +18,12 @@
 		public static const mini_cs:int = 4;//Размер одной клетки на мини-карте в пикселях.
 		public static const pd:Number = 10;//Минимальное расстояние между игроками
 		public static const mmd:int = 10;//Расстояние между мини-картами при выборе карты для игры
+		public static const green:BitmapData=new green_class(0,0)
+		public static const water:BitmapData=new water_class(0,0)
+		public static const montain:BitmapData=new montain_class(0,0)
+		public static const green_dark:BitmapData=new green_dark_class(0,0)
+		public static const water_dark:BitmapData=new water_dark_class(0,0)
+		public static const montain_dark:BitmapData=new montain_dark_class(0,0)
 		public static var cell_size = cell_pixels;//Размер клетки изначальна она равна кол-ву пикселей, но при маштабировании будет меняться.
 		public static var map_rect:Rectangle = new Rectangle(0,0,visible_map_x,visible_map_y);//Видимая часть карты
 		public static var step:int = 0;//Указывает номер хода в игре

@@ -1,4 +1,4 @@
-﻿package  {
+﻿package  Andrey{
 	
 	import MaxMain;
 	import flash.events.Event;

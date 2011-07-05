@@ -6,107 +6,209 @@
 
 	public class ScrollBar extends Sprite
 	{
+		var box:Sprite;
+		var rect:Rectangle;
+		var st_size:Number;
+		var s:Number;
+		var st_spr:Sprite;
+		var shift:int;
+		var bar:Sprite = new Sprite  ;
+
+		//r - прямоугольник видимости
 		//stp - место где лежит объект прокрутки, туда же кладем и скролл бар
 		//st - объект который будем прокручивать,
-		//arrow - отрисованная стрелка, она должна быть отцентрализована (коры 0,0 по середине)
+		//ar - отрисованная стрелка, она должна быть отцентрализована (коры 0,0 по середине)
 		//box - объект который передвигаем для воздействия на главный объект
 		//cbord - цвет границы
-		//z - указывает направление скроллбара, если 0 то вертик., если 1 то горизонт., если 2 то и то и другое
-		//w_all - ширина scrollbar'а, она должна быть кратна 25 для правильной отрисовки.
+		//z - указывает направление скроллбара, если 0 то вертик., если 1 то горизонт.
+		//w_all - ширина scrollbar'а
 		//sw - указывает насколько прокручиваем
-		//size - указывает размер видимой части
-		//size2 - используется при z=2 указывает видимую часть по y, а size тогда указывает видимую часть по x
+		//size - высота места под бар
 
-		public function ScrollBar(stp:Sprite,st:Sprite,ar:Class,box:Class,cbord:uint,z:Number=0,w_all:int=50,sw:Number=10,size:Number=200,size2:Number=150)
+		public function ScrollBar(r:Rectangle,stp:Sprite,st:Sprite,ar:Class,b:Class,cbord:uint,z:Number=0,w_all:int=50,sw:Number=10,size:Number=200)
 		{
-			var rect:Rectangle= new Rectangle();
-			var all:Sprite = new Sprite  ;
-			var all2:Sprite = new Sprite();
-			var up:Sprite;
-			var down:Sprite;
-			var left:Sprite;
-			var right:Sprite;
-			var wback:int;
-			var wbord:int;
-			var w_all:int;
+			var wback:int = 46;
+			var wbord:int = 2;
+			var b1:Sprite=new ar();
+			var b2:Sprite=new ar();
 
+			box=new b();
+			rect = r;
+			st_spr = st;
 			if (z == 0)
 			{
-				rect = new Rectangle(0,0,st.width,size);
-				st.scrollRect = rect;
-				all.x = st.width;
-				create_all(all,up,down);
+				st_size = st_spr.height;
 			}
-			else if (z==1)
+			else if (z == 1)
 			{
-				rect = new Rectangle(0,0,size,st.height);
-				st.scrollRect = rect;
-				all.rotation = 90;
-				all.x = size;
-				all.y = st.height;
-				create_all(all,left,right);
+				st_size = st_spr.width;
 			}
-			else if (z==2)
+			create_b(b1);
+			create_b(b2);
+
+			s = size - b1.height * 2;
+			box.width = wback;
+			box.height= s/(st_size/size);
+			box.x = wbord;
+			b1.x = b1.width / 2;
+			b1.y = b1.height / 2;
+			b1.rotation = 180;
+			b2.x = b2.width / 2;
+			b2.y = size - b1.height / 2;
+			bar.graphics.beginFill(0xFF0000,0);
+			bar.graphics.drawRect(wbord,0,wback,s);
+			bar.graphics.beginFill(cbord);
+			bar.graphics.drawRect(0,0,wbord,s);
+			bar.graphics.drawRect(wback+wbord,0,wbord,s);
+			bar.y = b1.height;
+			addChild(bar);
+			bar.addChild(box);
+			bar.width = w_all;
+			st_spr.scrollRect = rect;
+			addEventListener(MouseEvent.CLICK,all_cl);
+			box.addEventListener(MouseEvent.MOUSE_MOVE,moving);
+
+			function create_b(bt:Sprite)
 			{
-				rect = new Rectangle(0,0,size,size2);
-				st.scrollRect = rect;
-				all.rotation = 90;
-				all.x = size;
-				all.y = size2;
-				all2.x = size;
-				create_all(all,up,down,size);
-				create_all(all2,left,right,size2);
+				bt.width = w_all;
+				bt.scaleY = bt.scaleX;
+				addChild(bt);
 			}
-			function create_all(all,b1,b2,s)
+			function all_cl(ev:MouseEvent)
 			{
-				b1=new ar();
-				b2= new ar();
-				b1.width = w_all;
-				b2.width = w_all;
-				b1.scaleY = b1.scaleX;
-				b2.scaleY = b2.scaleX;
-				wback = b1.width / 25 * 23;//ширина задника и передвигающегося бокса
-				wbord = b1.width / 25;//ширина границ
-				var w2:int = b1.width / 25 * 24;
-				b1.rotation = 180;
-				stp.addChild(all);
-				all.addChild(b2);
-				all.addChild(b1);
-				s -=  b1.height * 2;
-				b1.x = b1.width / 2;
-				b1.y = b1.height / 2;
-				all.graphics.beginFill(0xFF0000,0);
-				//all.graphics.drawRect(wbord,b1.height,wback,s);
-				all.graphics.beginFill(cbord,1);
-				all.graphics.drawRect(0,b1.height,wbord,s);
-				all.graphics.drawRect(w2,b1.height,wbord,s);
-				b2.x = b2.width / 2;
-				b2.y = s + b1.height * 1.5;
-				//all.addEventListener(MouseEvent.CLICK,all_cl);
-				//function all_cl(ev:MouseEvent)
-				//{
-				//if (ev.stageY - stp.y > b1.height + s && ev.stageY - stp.y < st.height)
-				//{
-				//rect.y +=  sw;
-				//st.scrollRect = rect;
-				//}
-				//else if (ev.stageY-stp.y < b1.height)
-				//{
-				//rect.y -=  sw;
-				//st.scrollRect = rect;
-				//}
-				//else if (ev.stageX - stp.x > b1.width + s && ev.stageX - stp.x < st.width)
-				//{
-				//rect.x +=sw
-				//st.scrollRect = rect
-				//}
-				//else if (ev.stageX-stp.x < b1.width)
-				//{
-				//rect.x -=sw
-				//st.scrollRect = rect
-				//}
-				//}
+				if (z == 0)
+				{
+					if (ev.stageY - stp.y < b1.height)
+					{
+						if (rect.y - sw < 0)
+						{
+							rect.y = 0;
+						}
+						else
+						{
+							rect.y -=  sw;
+						}
+					}
+					else if (ev.stageY - stp.y > b1.height + s)
+					{
+						if (rect.y + sw < st_size - size)
+						{
+							rect.y +=  sw;
+						}
+						else
+						{
+							rect.y = st_size - size;
+						}
+					}
+					else
+					{
+						box.y = ev.stageY - stp.y - b1.height - box.height / 2;
+						if (box.y < 0)
+						{
+							box.y = 0;
+						}
+						else if (box.y>s-box.height)
+						{
+							box.y = s - box.height;
+						}
+						rect.y = box.y / s * st_size;
+					}
+					replace(rect.y);
+				}
+				else if (z == 1)
+				{
+					if (ev.stageX - stp.x < b1.height)
+					{
+						if (rect.x - sw < 0)
+						{
+							rect.x = 0;
+						}
+						else
+						{
+							rect.x -=  sw;
+						}
+					}
+					else if (ev.stageX - stp.x > b1.height + s)
+					{
+						if (rect.x + sw < st_size - size)
+						{
+							rect.x +=  sw;
+						}
+						else
+						{
+							rect.x = st_size - size;
+						}
+					}
+					else
+					{
+						box.y = ev.stageX - stp.x - b1.height - box.height / 2;
+						if (box.y < 0)
+						{
+							box.y = 0;
+						}
+						else if (box.y>s-box.height)
+						{
+							box.y = s - box.height;
+						}
+						rect.x = box.y / s * st_size;
+					}
+					replace(rect.x);
+				}
 			}
+			function moving(ev:MouseEvent)
+			{
+				if (ev.buttonDown == true)
+				{
+					all_cl(ev);
+				}
+			}
+			//function replace_map(ev:MouseEvent)
+			//{
+			//var mouse_x = mouseX;
+			//var mouse_y = mouseY;
+			//addEventListener(MouseEvent.MOUSE_MOVE,map_move);
+			//function map_move(event:MouseEvent)
+			//{
+			//if (scr.rect.x + mouse_x - mouseX < 0)
+			//{
+			//scr.rect.x = 0;
+			//}
+			//else if (scr.rect.x + mouse_x - mouseX>map.width-Game.visible_map_x)
+			//{
+			//scr.rect.x = map.width-Game.visible_map_x;
+			//}
+			//else
+			//{
+			//scr.rect.x+=mouse_x-mouseX;
+			//}
+			//if (scr.rect.y + mouse_y - mouseY < 0)
+			//{
+			//scr.rect.y = 0;
+			//}
+			//else if (scr.rect.y + mouse_y - mouseY>map.height-Game.visible_map_y)
+			//{
+			//scr.rect.y = map.height-Game.visible_map_y;
+			//}
+			//else
+			//{
+			//scr.rect.y+=mouse_y-mouseY;
+			//}
+			//
+			//}
+			//map_place.addEventListener(MouseEvent.MOUSE_UP,map_stop);
+			//map_place.addEventListener(MouseEvent.ROLL_OUT,map_stop);
+			//function map_stop(event:MouseEvent)
+			//{
+			//removeEventListener(MouseEvent.MOUSE_MOVE,map_move);
+			//removeEventListener(MouseEvent.MOUSE_UP,map_stop);
+			//removeEventListener(MouseEvent.ROLL_OUT,map_stop);
+			//}
+			//}
+		}
+		public function replace(shift)
+		{
+			box.y = shift / st_size * s;
+			st_spr.scrollRect = rect;
 		}
 	}
 }

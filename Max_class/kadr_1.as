@@ -52,6 +52,8 @@
 					Players[i] = new Player(u.all_txt[i].text,u.all_bc[i].color);
 				}
 				g.clear_game();
+				var k2:kadr_2=new kadr_2();
+				g.addChild(k2);
 			}
 		}
 	}
