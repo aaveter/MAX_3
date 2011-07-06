@@ -29,10 +29,12 @@
 		{
 			var wback:int = 46;
 			var wbord:int = 2;
-			var b1:Sprite=new ar();
-			var b2:Sprite=new ar();
+			var b1:Sprite = new ar  ;
+			var b2:Sprite = new ar  ;
+			var w:Number=st.width
+			var h:Number=st.height
 
-			box=new b();
+			box = new b  ;
 			rect = r;
 			st_spr = st;
 			if (z == 0)
@@ -48,7 +50,7 @@
 
 			s = size - b1.height * 2;
 			box.width = wback;
-			box.height= s/(st_size/size);
+			box.height = s / (st_size / size);
 			box.x = wbord;
 			b1.x = b1.width / 2;
 			b1.y = b1.height / 2;
@@ -59,14 +61,16 @@
 			bar.graphics.drawRect(wbord,0,wback,s);
 			bar.graphics.beginFill(cbord);
 			bar.graphics.drawRect(0,0,wbord,s);
-			bar.graphics.drawRect(wback+wbord,0,wbord,s);
+			bar.graphics.drawRect(wback + wbord,0,wbord,s);
 			bar.y = b1.height;
 			addChild(bar);
 			bar.addChild(box);
 			bar.width = w_all;
 			st_spr.scrollRect = rect;
-			addEventListener(MouseEvent.CLICK,all_cl);
-			box.addEventListener(MouseEvent.MOUSE_MOVE,moving);
+			bar.addEventListener(MouseEvent.CLICK,all_cl);
+			b1.addEventListener(MouseEvent.CLICK,all_cl);
+			b2.addEventListener(MouseEvent.CLICK,all_cl);
+			box.addEventListener(MouseEvent.MOUSE_MOVE,moving);			
 
 			function create_b(bt:Sprite)
 			{
@@ -107,7 +111,7 @@
 						{
 							box.y = 0;
 						}
-						else if (box.y>s-box.height)
+						else if (box.y > s - box.height)
 						{
 							box.y = s - box.height;
 						}
@@ -146,7 +150,7 @@
 						{
 							box.y = 0;
 						}
-						else if (box.y>s-box.height)
+						else if (box.y > s - box.height)
 						{
 							box.y = s - box.height;
 						}
@@ -161,49 +165,7 @@
 				{
 					all_cl(ev);
 				}
-			}
-			//function replace_map(ev:MouseEvent)
-			//{
-			//var mouse_x = mouseX;
-			//var mouse_y = mouseY;
-			//addEventListener(MouseEvent.MOUSE_MOVE,map_move);
-			//function map_move(event:MouseEvent)
-			//{
-			//if (scr.rect.x + mouse_x - mouseX < 0)
-			//{
-			//scr.rect.x = 0;
-			//}
-			//else if (scr.rect.x + mouse_x - mouseX>map.width-Game.visible_map_x)
-			//{
-			//scr.rect.x = map.width-Game.visible_map_x;
-			//}
-			//else
-			//{
-			//scr.rect.x+=mouse_x-mouseX;
-			//}
-			//if (scr.rect.y + mouse_y - mouseY < 0)
-			//{
-			//scr.rect.y = 0;
-			//}
-			//else if (scr.rect.y + mouse_y - mouseY>map.height-Game.visible_map_y)
-			//{
-			//scr.rect.y = map.height-Game.visible_map_y;
-			//}
-			//else
-			//{
-			//scr.rect.y+=mouse_y-mouseY;
-			//}
-			//
-			//}
-			//map_place.addEventListener(MouseEvent.MOUSE_UP,map_stop);
-			//map_place.addEventListener(MouseEvent.ROLL_OUT,map_stop);
-			//function map_stop(event:MouseEvent)
-			//{
-			//removeEventListener(MouseEvent.MOUSE_MOVE,map_move);
-			//removeEventListener(MouseEvent.MOUSE_UP,map_stop);
-			//removeEventListener(MouseEvent.ROLL_OUT,map_stop);
-			//}
-			//}
+			}			
 		}
 		public function replace(shift)
 		{
