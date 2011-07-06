@@ -6,12 +6,11 @@
 	import flash.display.StageScaleMode;
 	import flash.display.Sprite;
 	import flash.display.BitmapData;
+	import flash.events.Event;
 
 	public class Game extends Sprite
 	{
 		public static const map_scroll:int = 1;//Размер сдвига при прокрутки карты
-		public static const visible_map_x:int = 700;//Размер показываемой карты по X
-		public static const visible_map_y:int = 700;//Размер показываемой карты по Y
 		public static const map_x:int = 250;//Карта сдвинаута по x
 		public static const map_y:int = 0;//Карта сдвинаута по y
 		public static const cell_pixels:int = 100;//Количество пикселей из которого состоит клетка.
@@ -25,17 +24,38 @@
 		public static const water_dark:BitmapData=new water_dark_class(0,0)
 		public static const montain_dark:BitmapData=new montain_dark_class(0,0)
 		public static var cell_size = cell_pixels;//Размер клетки изначальна она равна кол-ву пикселей, но при маштабировании будет меняться.
-		public static var map_rect:Rectangle = new Rectangle(0,0,visible_map_x,visible_map_y);//Видимая часть карты
 		public static var step:int = 0;//Указывает номер хода в игре
 
-		public var doc_x;//Размер документа по x
-		public var doc_y;//Размер документа по y
+		public static var visible_map_x:int = 700;//Размер показываемой карты по X
+		public static var visible_map_y:int = 700;//Размер показываемой карты по Y
+		public static var map_rect:Rectangle = new Rectangle(0,0,10,10);//Видимая часть карты
+		public var doc_x:int = 100;//Размер документа по x
+		public var doc_y:int = 100;//Размер документа по 
 
-		public function Game(main)
+		//var resize_obj = {};
+		private var stage_:Stage;
+
+		public function Game(main:Stage)
 		{
-			doc_x = main.stageWidth;//Размер документа по x
-			doc_y = main.stageHeight;//Размер документа по y
+			stage_ = main;
+			stage_.scaleMode="noScale";
+			stage_.align="TL";
+			doc_x = stage_.stageWidth;//Размер документа по x
+			doc_y = stage_.stageHeight;//Размер документа по y
+			stage_.addEventListener(Event.RESIZE,resize_main);
 		}
+		
+		function resize_main(ev:Event) {
+			doc_x = stage_.stageWidth;//Размер документа по x
+			doc_y = stage_.stageHeight;//Размер документа по y
+			visible_map_x = doc_x - map_x;
+			visible_map_y = doc_y - map_y - 50;
+			map_rect.width = visible_map_x;
+			map_rect.height = visible_map_y;
+			trace(visible_map_x);
+			trace(visible_map_y);
+		}
+		
 		public function clear_game()
 		{
 			while (numChildren != 0)
