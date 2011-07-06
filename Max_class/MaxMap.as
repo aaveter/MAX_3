@@ -9,6 +9,8 @@
 	{
 		var map:Sprite=new Sprite();
 		var map_units:Sprite=new Sprite();
+		var setka:Sprite=new Sprite();
+		var elements:Array=new Array();
 
 		//map_size - размер карты
 		//cell - массив всех клеток карты
@@ -18,11 +20,59 @@
 			var map_place:Sprite;
 			addChild(map_units);
 			addChild(map);
+			addChild(setka);
 			//Функция оптимизирующая затраты на графическую визуализацию
 			var gor_start:int = new int  ;
 			var vert_start:int = new int  ;
 			var gor_length:int = new int  ;
 			var vert_length:int = new int  ;			
+
+			
+/*			var me:MapElement=new MapElement("water");
+			elements[0]=me;
+			me.addPoint(new MapPoint(20,20));
+			me.addPoint(new MapPoint(220,40));
+			me.addPoint(new MapPoint(220,320));
+			me.addPoint(new MapPoint(20,220));
+
+			map.graphics.beginFill(0x00FF00);
+			map.graphics.drawRect(0,0,map_size*100,map_size*100);
+			map.graphics.endFill();
+			
+			for (var i:int=0; i < elements.length; i++) {
+				var ucol:int;
+				
+				if (elements[i].type=="water") {
+					ucol = 0x0000FF;
+				}
+				else ucol = 0x00FF00;
+				
+				map.graphics.lineStyle(2,ucol);
+				map.graphics.beginFill(ucol);
+				
+				var poLast:MapPoint = elements[i].points[elements[i].points.length-1];
+				map.graphics.moveTo(poLast.x,poLast.y);
+				for (var j:int=0; j < elements[i].points.length; j++) {
+					var po:MapPoint = elements[i].points[j];
+					var dx:int = poLast.x - po.x;
+					var dy:int = poLast.y - po.y;
+					map.graphics.curveTo( poLast.x-dx/2+10,poLast.y-dy/2+10,po.x,po.y);
+					poLast=po;
+				}
+				
+				map.graphics.endFill();
+			}
+			
+			//setka.graphics.beginFill(0xFF0000);
+			setka.graphics.lineStyle(2);
+			for (var i:int = 0; i < map_size; i++) {
+				setka.graphics.moveTo(i*100,0);
+				setka.graphics.lineTo(i*100,map_size*100);
+			}
+			for (var i:int = 0; i < map_size; i++) {
+				setka.graphics.moveTo(0,i*100);
+				setka.graphics.lineTo(map_size*100,i*100);
+			}*/
 
 			//Подготовка к оптимизации
 			for (var gor:int = 0; gor<map_size; gor++)

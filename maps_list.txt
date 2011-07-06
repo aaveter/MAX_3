@@ -1,0 +1,1 @@
+maps_files=map001.txt,map002.txt,map003.txt&maps_count=3&map1=map1.txt&map2=map2.txt&map3=map3.txt

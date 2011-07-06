@@ -37,7 +37,6 @@
 			Zoom.y = 5;
 			addEventListener(MouseEvent.MOUSE_MOVE,moving);
 			addEventListener(MouseEvent.CLICK,replace);
-			map.addEventListener(MouseEvent.MOUSE_DOWN,replace_map);
 
 			function moving(ev:MouseEvent)
 			{
