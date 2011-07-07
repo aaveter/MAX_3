@@ -4,7 +4,6 @@
 	import flash.geom.Rectangle;
 	import flash.display.Sprite;
 
-
 	public class MaxMap extends Sprite
 	{
 		var map:Sprite=new Sprite();
@@ -28,7 +27,7 @@
 			var vert_length:int = new int  ;			
 
 			
-/*			var me:MapElement=new MapElement("water");
+			/*var me:MapElement=new MapElement("water");
 			elements[0]=me;
 			me.addPoint(new MapPoint(20,20));
 			me.addPoint(new MapPoint(220,40));

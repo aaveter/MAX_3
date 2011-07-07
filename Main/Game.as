@@ -7,6 +7,7 @@
 	import flash.display.Sprite;
 	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.display.StageQuality;
 
 	public class Game extends Sprite
 	{
@@ -40,6 +41,7 @@
 		{
 			game_ = this;
 			stage_ = main;
+			stage_.quality = StageQuality.BEST;
 			stage_.scaleMode="noScale"; // чтобы получать событие изменения размера
 			stage_.align="TL"; // пусть сцена выравнивается по левому и правому краю
 			refreshSizes();
