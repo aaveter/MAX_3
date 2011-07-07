@@ -3,6 +3,7 @@
 	import flash.display.*;
 	import flash.geom.Rectangle;
 	import flash.events.MouseEvent;
+	import flash.events.Event;
 
 	public class ScrollBar extends Sprite
 	{
@@ -24,6 +25,16 @@
 		//w_all - ширина scrollbar'а
 		//sw - указывает насколько прокручиваем
 		//size - высота места под бар
+		
+		override public function set width(w:Number):void
+		{
+		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
+		}
+		
+		override public function set height(h:Number):void 
+		{
+		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
+		}
 
 		public function ScrollBar(r:Rectangle,stp:Sprite,st:Sprite,ar:Class,b:Class,cbord:uint,z:Number=0,w_all:int=50,sw:Number=10,size:Number=200)
 		{
@@ -166,6 +177,10 @@
 					all_cl(ev);
 				}
 			}			
+			addEventListener(Event.RESIZE,resize_me);
+			function resize_me(ev:Event) {
+				// здесь должна происходить перерисовка по новым размерам
+			}
 		}
 		public function replace(shift)
 		{

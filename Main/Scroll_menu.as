@@ -6,6 +6,7 @@
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
+	import flash.events.Event;
 
 	public class Scroll_menu extends Sprite
 	{
@@ -25,8 +26,21 @@
 		//size1 - указывает размер видимой части
 		//size2 - используется при z=2 указывает видимую часть по x, а size1 тогда указывает видимую часть по y
 
+		override public function set width(w:Number):void
+		{
+		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
+		}
+		
+		override public function set height(h:Number):void 
+		{
+		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
+		}
+
 		public function Scroll_menu(stp:Sprite,st:Sprite,ar:Class,b:Class,cbord:uint=0x0000FF,z:int=2,w_all:int=50,sw:int=10,size1:int=150,size2:int=200)
 		{
+			width = size1;
+			height = size2;
+			
 			st_w = st.width;
 			st_h = st.height;
 			if (z == 0)
@@ -101,6 +115,14 @@
 					st.removeEventListener(MouseEvent.MOUSE_UP,map_stop);
 					st.removeEventListener(MouseEvent.ROLL_OUT,map_stop);
 				}
+			}
+			addEventListener(Event.RESIZE,resize_me);
+			function resize_me(ev:Event) {
+				// переразмериваем
+				size1 = width;
+				scroll_x.width = size1;
+				size2 = height;
+				scroll_y.height = size2;
 			}
 		}
 	}

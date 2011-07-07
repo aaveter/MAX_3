@@ -3,6 +3,7 @@
 	import flash.net.*
 	import flash.events.Event;
 	import flash.display.Sprite;
+	import Main.Game;
 
 	public class kadr_2 extends Sprite
 	{
@@ -16,7 +17,8 @@
 			function maps_complete(ev:Event)
 			{
 				var k3:kadr_3=new kadr_3(urlLoaderMap)
-				addChild(k3)
+				//addChild(k3)
+				Game.setKadr(k3);
 			}
 		}
 	}

@@ -11,9 +11,20 @@
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
-
+	import flash.events.Event;
+	
 	public class kadr_3 extends Sprite
 	{
+		override public function set width(w:Number):void
+		{
+		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
+		}
+		
+		override public function set height(h:Number):void 
+		{
+		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
+		}
+		
 		public function kadr_3(urlLoaderMap:URLLoader)
 		{
 			var ML:MaxMapLoader = new MaxMapLoader(urlLoaderMap);
@@ -21,7 +32,7 @@
 			var map_place:Sprite=new Sprite();
 			var rect:Rectangle = new Rectangle(0,0,Game.visible_map_x,Game.visible_map_y);
 			
-			var visible_map:Number=Game.visible_map_x
+			//var visible_map:Number=Game.visible_map_x
 			var map:MaxMap = new MaxMap(ML.map_size,ML.cell);
 			scroll_place.addChild(map_place);
 			map_place.addChild(map);
@@ -39,6 +50,16 @@
 			Zoom.y = 5;
 			addEventListener(MouseEvent.MOUSE_MOVE,moving);
 			addEventListener(MouseEvent.CLICK,replace);
+			addEventListener(Event.RESIZE,resize_me);
+
+			function resize_me(ev:Event) {
+				rect.width = Game.visible_map_x;
+				rect.height = Game.visible_map_y;
+				map_place.width = Game.visible_map_x;
+				map_place.height = Game.visible_map_y;
+				scr.width = Game.visible_map_x;
+				scr.height = Game.visible_map_y;
+			}
 
 			function moving(ev:MouseEvent)
 			{

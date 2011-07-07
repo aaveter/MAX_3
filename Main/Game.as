@@ -29,38 +29,56 @@
 		public static var visible_map_x:int = 700;//Размер показываемой карты по X
 		public static var visible_map_y:int = 700;//Размер показываемой карты по Y
 		public static var map_rect:Rectangle = new Rectangle(0,0,10,10);//Видимая часть карты
-		public var doc_x:int = 100;//Размер документа по x
-		public var doc_y:int = 100;//Размер документа по 
+		public static var doc_x:int = 100;//Размер документа по x
+		public static var doc_y:int = 100;//Размер документа по 
 
-		//var resize_obj = {};
-		private var stage_:Stage;
+		private static var stage_:Stage = null; // ссылка на сцену
+		private static var kadr_:Sprite = null; // ссылка на текущий кадр
+		private static var game_:Game = null; // ссылка на себя саму
 
 		public function Game(main:Stage)
 		{
+			game_ = this;
 			stage_ = main;
-			stage_.scaleMode="noScale";
-			stage_.align="TL";
-			doc_x = stage_.stageWidth;//Размер документа по x
-			doc_y = stage_.stageHeight;//Размер документа по y
+			stage_.scaleMode="noScale"; // чтобы получать событие изменения размера
+			stage_.align="TL"; // пусть сцена выравнивается по левому и правому краю
+			refreshSizes();
 			stage_.addEventListener(Event.RESIZE,resize_main);
 		}
 		
-		function resize_main(ev:Event) {
-			doc_x = stage_.stageWidth;//Размер документа по x
-			doc_y = stage_.stageHeight;//Размер документа по y
+		// обновляем размеры: обновляем глобальные переменные и размеры кадра
+		public function refreshSizes() {
+			doc_x = stage_.stageWidth; //обновляем размер документа по x
+			doc_y = stage_.stageHeight; //Размер документа по y
+			//width = doc_x;
+			//height = doc_y;
 			visible_map_x = doc_x - map_x;
 			visible_map_y = doc_y - map_y - 50;
 			map_rect.width = visible_map_x;
 			map_rect.height = visible_map_y;
-			trace(visible_map_x);
-			trace(visible_map_y);
+			if (kadr_ != null) {
+				kadr_.width = width;
+				kadr_.height = height;
+			}
 		}
 		
-		public function clear_game()
-		{
-			while (numChildren != 0)
-			{
-				removeChildAt(numChildren-1);
+		// происходит, когда меняется размер сцены
+		function resize_main(ev:Event) {
+			refreshSizes();
+		}
+		
+		// переключаем кадр (отключаем предыдущий кадр, подключаем новый)
+		static public function setKadr(ka:Sprite) {
+			if (game_!=null) {
+				if (kadr_!=null) {
+					game_.removeChild(kadr_);
+				}
+				kadr_ = ka;
+				game_.addChild(kadr_);
+				//kadr_.x = 0;
+				//kadr_.y = 0;
+				//kadr_.width = game_.width;
+				//kadr_.height = game_.height;
 			}
 		}
 	}
