@@ -9,8 +9,7 @@
 	import flash.events.Event;
 
 	public class Game extends Sprite
-	{
-		public static const map_scroll:int = 1;//Размер сдвига при прокрутки карты
+	{		
 		public static const map_x:int = 250;//Карта сдвинаута по x
 		public static const map_y:int = 0;//Карта сдвинаута по y
 		public static const cell_pixels:int = 100;//Количество пикселей из которого состоит клетка.
@@ -27,8 +26,7 @@
 		public static var step:int = 0;//Указывает номер хода в игре
 
 		public static var visible_map_x:int = 700;//Размер показываемой карты по X
-		public static var visible_map_y:int = 700;//Размер показываемой карты по Y
-		public static var map_rect:Rectangle = new Rectangle(0,0,10,10);//Видимая часть карты
+		public static var visible_map_y:int = 700;//Размер показываемой карты по Y	
 		public static var doc_x:int = 100;//Размер документа по x
 		public static var doc_y:int = 100;//Размер документа по 
 
@@ -49,13 +47,9 @@
 		// обновляем размеры: обновляем глобальные переменные и размеры кадра
 		public function refreshSizes() {
 			doc_x = stage_.stageWidth; //обновляем размер документа по x
-			doc_y = stage_.stageHeight; //Размер документа по y
-			//width = doc_x;
-			//height = doc_y;
+			doc_y = stage_.stageHeight; //Размер документа по y			
 			visible_map_x = doc_x - map_x;
-			visible_map_y = doc_y - map_y - 50;
-			map_rect.width = visible_map_x;
-			map_rect.height = visible_map_y;
+			visible_map_y = doc_y - map_y - 50;			
 			if (kadr_ != null) {
 				kadr_.width = width;
 				kadr_.height = height;
@@ -74,11 +68,7 @@
 					game_.removeChild(kadr_);
 				}
 				kadr_ = ka;
-				game_.addChild(kadr_);
-				//kadr_.x = 0;
-				//kadr_.y = 0;
-				//kadr_.width = game_.width;
-				//kadr_.height = game_.height;
+				game_.addChild(kadr_);				
 			}
 		}
 	}

@@ -10,7 +10,7 @@
 		{
 			var colors:Array = new Array(0xFF0000,0xFFFF00,0xFF00FF,0x00FFFF,0x333300);//массив цветов для игроков
 			var n_txt:Array = new Array("2","3","4","5");//Массив значений для круглых кнопок
-			var r:Panel_rb = new Panel_rb(n_txt,4,0x0000FF,0x00FF99,0x00FF99,0x0000FF,1);
+			var r:Panel_rb = new Panel_rb(n_txt,4,0x0000FF,0x00FF99,0x00FF99,0x0000FF,0);
 			var u:Panel_txt;
 			var b:Button_press;
 			var Players:Array=new Array();

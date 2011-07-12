@@ -14,7 +14,7 @@
 		//zt - маштабируемый объект
 		//X - Максимальное уменьшение
 		//mmp - если есть мини-карта, то указываем параметр ответственный за отображение видимости на мини-карте.
-		public function Zoom_b(rect:Rectangle,st:Sprite,zt:Sprite,X:Number=4,mmp:Number=NaN)
+		public function Zoom_b(rect:Rectangle,st:Sprite,zt:Sprite,X:Number=16,mmp:Number=NaN)
 		{
 
 			var minus:Button_press = new Button_press(Formats.Static,"-");
@@ -52,7 +52,7 @@
 						rect.y = zt.height - rect.height;
 					}
 					zoom();
-					curX +=  1;
+					curX =  curX*2;
 				}				
 			}
 			function pl(ev:MouseEvent)
@@ -65,7 +65,7 @@
 					rect.x = rect.x * 2 + rect.width / 2;
 					rect.y = rect.y * 2 + rect.height / 2;
 					zoom();
-					curX -=  1;
+					curX =  curX/2;
 				}				
 			}
 			function zoom()

@@ -15,6 +15,7 @@
 		public var st_w:int;
 		public var st_h:int;
 		public var rect:Rectangle;
+		public var xyz:int = new int  ;//Определяет какие варианты скроллбаров имеются
 		//stp - место где лежит объект прокрутки, туда же кладем и скролл бар
 		//st - объект который будем прокручивать,
 		//ar - отрисованная стрелка, она должна быть отцентрализована (коры 0,0 по середине)
@@ -28,21 +29,19 @@
 
 		override public function set width(w:Number):void
 		{
-		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
+			dispatchEvent(new Event(Event.RESIZE));// испускаем сигнал изменения размера
 		}
-		
-		override public function set height(h:Number):void 
+
+		override public function set height(h:Number):void
 		{
-		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
+			dispatchEvent(new Event(Event.RESIZE));// испускаем сигнал изменения размера
 		}
 
 		public function Scroll_menu(stp:Sprite,st:Sprite,ar:Class,b:Class,cbord:uint=0x0000FF,z:int=2,w_all:int=50,sw:int=10,size1:int=150,size2:int=200)
 		{
-			width = size1;
-			height = size2;
-			
 			st_w = st.width;
 			st_h = st.height;
+			xyz = z;
 			if (z == 0)
 			{
 				rect = new Rectangle(0,0,st_w,size1);
@@ -117,13 +116,36 @@
 				}
 			}
 			addEventListener(Event.RESIZE,resize_me);
-			function resize_me(ev:Event) {
+			function resize_me(ev:Event)
+			{
 				// переразмериваем
 				size1 = width;
 				scroll_x.width = size1;
 				size2 = height;
 				scroll_y.height = size2;
 			}
+		}
+		public function resize_me(size_x,size_y)
+		{
+			rect.width = size_x;
+			rect.height = size_y;
+			if (xyz == 0)
+			{
+				scroll_y.x = size_x;
+				scroll_y.resize_me(size_y,rect.y)
+			}
+			else if (xyz == 1)
+			{
+				scroll_x.y = size_y + scroll_x.height;
+				scroll_x.resize_me(size_x,rect.x)
+			}
+			else if (xyz == 2)
+			{
+				scroll_y.x = size_x;
+				scroll_y.resize_me(size_y,rect.y)
+				scroll_x.y = size_y + scroll_x.height;
+				scroll_x.resize_me(size_x,rect.x)
+			}			
 		}
 	}
 }
