@@ -15,14 +15,14 @@
 
 	public class kadr_3 extends Sprite
 	{
-		var ML:MaxMapLoader
+		var ML:MaxMapLoader = null;
 		var scroll_place:Sprite=new Sprite();
 		var map_place:Sprite=new Sprite();
 		var rect:Rectangle = new Rectangle(0,0,Game.visible_map_x,Game.visible_map_y);
-		var map:MaxMap = new MaxMap(ML.map_size,ML.cell);
-		var scr:Scroll_menu;
-		var mini_map:MaxMiniMap;
-		var Z:Zoom_b;
+		var map:MaxMap = null;
+		var scr:Scroll_menu = null;
+		var mini_map:MaxMiniMap = null;
+		var Z:Zoom_b = null;
 		override public function set width(w:Number):void
 		{
 			scr.resize_me(Game.visible_map_x,Game.visible_map_y);
@@ -36,6 +36,7 @@
 		public function kadr_3(urlLoaderMap:URLLoader)
 		{
 			ML = new MaxMapLoader(urlLoaderMap);
+			map = new MaxMap(ML.map_size,ML.cell);
 			scroll_place.addChild(map_place);
 			map_place.addChild(map);
 			scr = new Scroll_menu(scroll_place,map_place,Arrow,bar_box,0x0000FF,2,30,100,Game.visible_map_y,Game.visible_map_x);
