@@ -9,7 +9,7 @@
 	{
 		var mini_map:Sprite=new Sprite();
 		var mini_map_units:Sprite=new Sprite();
-		var border_mm:Sprite = new border_class  ;
+		public var border_mm:Sprite = new border_class  ;
 		var rect:Rectangle
 
 		//map_size - размер карты

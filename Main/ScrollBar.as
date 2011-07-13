@@ -7,43 +7,41 @@
 
 	public class ScrollBar extends Sprite
 	{
-		var box:Sprite;
-		var rect:Rectangle;
-		var st_size:Number;
+		public var box:Sprite;
+		var rect:Rectangle;//прямоугольник прокрутки
+		var st_size:Number;//размер карты по интересующей скролл стороне
 		var s:Number;
-		var st_spr:Sprite;
-		var shift:int;
-		var bar:Sprite = new Sprite  ;
+		public var sh:Number;
+		var st_spr:Sprite;//прокручиваемый объект
+		var shift:int;//размер сдвига
+		var bar:Sprite = new Sprite  ;//столбик прокрутки
+		var b1:Sprite = new Sprite  ;//верхняя кнопка
+		var b2:Sprite = new Sprite  ;//нижняя кнопка
+		var size:Number = new Number  ;//размер видимой части карты  ;
+		var xyz:int = new int  ;//Определяет какие варианты скроллбаров имеются
 
 		//r - прямоугольник видимости
 		//stp - место где лежит объект прокрутки, туда же кладем и скролл бар
 		//st - объект который будем прокручивать,
 		//ar - отрисованная стрелка, она должна быть отцентрализована (коры 0,0 по середине)
-		//box - объект который передвигаем для воздействия на главный объект
+		//b - объект который передвигаем для воздействия на главный объект
 		//cbord - цвет границы
 		//z - указывает направление скроллбара, если 0 то вертик., если 1 то горизонт.
 		//w_all - ширина scrollbar'а
 		//sw - указывает насколько прокручиваем
 		//size - высота места под бар
-		
-		override public function set width(w:Number):void
-		{
-		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
-		}
-		
-		override public function set height(h:Number):void 
-		{
-		   dispatchEvent(new Event(Event.RESIZE)); // испускаем сигнал изменения размера
-		}
 
-		public function ScrollBar(r:Rectangle,stp:Sprite,st:Sprite,ar:Class,b:Class,cbord:uint,z:Number=0,w_all:int=50,sw:Number=10,size:Number=200)
+		public function ScrollBar(r:Rectangle,stp:Sprite,st:Sprite,ar:Class,b:Class,cbord:uint,z:Number=0,w_all:int=50,sw:Number=10,sz:Number=200)
 		{
 			var wback:int = 46;
 			var wbord:int = 2;
-			var b1:Sprite = new ar  ;
-			var b2:Sprite = new ar  ;
-			var w:Number=st.width
-			var h:Number=st.height
+			b1 = new ar  ;
+			b2 = new ar  ;
+			size = sz;
+			xyz=z
+			var w:Number = st.width;
+			var h:Number = st.height;
+			var bar_spr:Sprite = new Sprite  ;
 
 			box = new b  ;
 			rect = r;
@@ -60,6 +58,7 @@
 			create_b(b2);
 
 			s = size - b1.height * 2;
+			sh= s / (st_size / size);
 			box.width = wback;
 			box.height = s / (st_size / size);
 			box.x = wbord;
@@ -73,15 +72,16 @@
 			bar.graphics.beginFill(cbord);
 			bar.graphics.drawRect(0,0,wbord,s);
 			bar.graphics.drawRect(wback + wbord,0,wbord,s);
-			bar.y = b1.height;
-			addChild(bar);
-			bar.addChild(box);
-			bar.width = w_all;
+			bar_spr.y = b1.height;
+			addChild(bar_spr);
+			bar_spr.addChild(bar);
+			bar_spr.addChild(box);
+			bar_spr.width = w_all;
 			st_spr.scrollRect = rect;
-			bar.addEventListener(MouseEvent.CLICK,all_cl);
+			bar_spr.addEventListener(MouseEvent.CLICK,all_cl);
 			b1.addEventListener(MouseEvent.CLICK,all_cl);
 			b2.addEventListener(MouseEvent.CLICK,all_cl);
-			box.addEventListener(MouseEvent.MOUSE_MOVE,moving);			
+			bar_spr.addEventListener(MouseEvent.MOUSE_MOVE,moving);
 
 			function create_b(bt:Sprite)
 			{
@@ -91,101 +91,87 @@
 			}
 			function all_cl(ev:MouseEvent)
 			{
+				var shift:Number = new Number  ;
 				if (z == 0)
 				{
-					if (ev.stageY - stp.y < b1.height)
-					{
-						if (rect.y - sw < 0)
-						{
-							rect.y = 0;
-						}
-						else
-						{
-							rect.y -=  sw;
-						}
-					}
-					else if (ev.stageY - stp.y > b1.height + s)
-					{
-						if (rect.y + sw < st_size - size)
-						{
-							rect.y +=  sw;
-						}
-						else
-						{
-							rect.y = st_size - size;
-						}
-					}
-					else
-					{
-						box.y = ev.stageY - stp.y - b1.height - box.height / 2;
-						if (box.y < 0)
-						{
-							box.y = 0;
-						}
-						else if (box.y > s - box.height)
-						{
-							box.y = s - box.height;
-						}
-						rect.y = box.y / s * st_size;
-					}
-					replace(rect.y);
+					shift = rect.y;
 				}
 				else if (z == 1)
 				{
-					if (ev.stageX - stp.x < b1.height)
+					shift = rect.x;
+				}
+				if (bar_spr.mouseY < 0)
+				{
+					if (shift - sw < 0)
 					{
-						if (rect.x - sw < 0)
-						{
-							rect.x = 0;
-						}
-						else
-						{
-							rect.x -=  sw;
-						}
-					}
-					else if (ev.stageX - stp.x > b1.height + s)
-					{
-						if (rect.x + sw < st_size - size)
-						{
-							rect.x +=  sw;
-						}
-						else
-						{
-							rect.x = st_size - size;
-						}
+						shift = 0;
 					}
 					else
 					{
-						box.y = ev.stageX - stp.x - b1.height - box.height / 2;
-						if (box.y < 0)
-						{
-							box.y = 0;
-						}
-						else if (box.y > s - box.height)
-						{
-							box.y = s - box.height;
-						}
-						rect.x = box.y / s * st_size;
+						shift -=  sw;
 					}
-					replace(rect.x);
 				}
+				else if (bar_spr.mouseY > s)
+				{
+					if (shift + sw < st_size - size)
+					{
+						shift +=  sw;
+					}
+					else
+					{
+						shift = st_size - size;
+					}
+				}
+				else
+				{
+					box.y = bar_spr.mouseY - box.height / 2;
+					if (box.y < 0)
+					{
+						box.y = 0;
+					}
+					else if (box.y > s - box.height)
+					{
+						box.y = s - box.height;
+					}
+					shift = box.y / s * st_size;
+				}				
+				replace(shift);
 			}
+
 			function moving(ev:MouseEvent)
 			{
 				if (ev.buttonDown == true)
 				{
 					all_cl(ev);
 				}
-			}			
-			addEventListener(Event.RESIZE,resize_me);
-			function resize_me(ev:Event) {
-				// здесь должна происходить перерисовка по новым размерам
 			}
 		}
 		public function replace(shift)
 		{
-			box.y = shift / st_size * s;
+			box.y = shift / st_size * bar.height;
+			if (xyz == 0)
+			{
+				rect.y = shift;
+			}
+			else if (xyz == 1)
+			{
+				rect.x = shift;
+			}
 			st_spr.scrollRect = rect;
+		}
+		public function resize_me(sz,shift)
+		{
+			size = sz;
+			bar.height = size - b1.height * 2;
+			s = bar.height;
+			sh= s / (st_size / size);
+			box.height = s / (st_size / size);
+			b2.y = size - b1.height / 2;
+			if (shift > st_size - size)
+			{
+				shift = st_size - size;
+			}
+			replace(shift);
 		}
 	}
 }
