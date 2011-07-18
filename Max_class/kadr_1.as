@@ -53,7 +53,11 @@
 				{
 					Players[i] = new Player(u.all_txt[i].text,u.all_bc[i].color);
 				}
-				var k2:kadr_2=new kadr_2();
+				
+				
+				
+				var k2:kadr_2 = new kadr_2();
+				
 				Game.setKadr(k2);
 			}
 		}

@@ -48,10 +48,12 @@
 		
 		var urlRequestMap:URLRequest;
 		var urlLoaderMap:Array;
+		var statuser:LoadStatuser = null;
 
 		public function kadr_2() {
 			// constructor code
 			//main = main_;
+			//statuser = stat;
 			
 			//Загружаю все созданные карты
 			mini_maps_place =new Sprite  ;
@@ -71,11 +73,18 @@
 			urlLoaderMap=new Array;
 			mapsCount=0;
 			
+			statuser = new LoadStatuser(Game.doc_x/2 - 100, Game.doc_y/2 - 10, 200, 20);
+		    addChild(statuser);
+
+			trace("statuser = 0");
+			
 			urlRequest = new URLRequest("maps_list.txt");
 			urlLoader = new URLLoader();
 			urlLoader.dataFormat=URLLoaderDataFormat.VARIABLES;
 			urlLoader.addEventListener(Event.COMPLETE, urlLoader_complete);
 			urlLoader.load(urlRequest);
+			
+			statuser.setPos(10);
 			
 		}		
 		
@@ -84,6 +93,8 @@
 			//trace("mapsCount = " + mapsCount.toString());
 			cmm.x=(Game.map_x+Game.mmd)*((i+1)-qx*Math.floor((i+1)/qx))+20;
 			cmm.y=(Game.map_x+Game.mmd+20)*Math.floor((i+1)/qx)+20;
+			
+			statuser.setPos(20);
 			
 			load_next_map();
 		}
@@ -302,6 +313,7 @@
 		}
 		
 		function load_next_map() {
+			statuser.setPos(20 + (i+1)*80/mapsCount);
 			if (i<mapsCount-1) {
 				i+=1;
 				
@@ -347,6 +359,8 @@
 			Ok_2.x=(Game.doc_x-Ok_2.width)/2;
 			Ok_2.y=Game.doc_y-Ok_2.height-100;
 			Ok_2.addEventListener(MouseEvent.CLICK, press_Ok_2);
+			
+			removeChild(statuser);
 		}
 		
 		function press_Ok_2(event:MouseEvent) {
