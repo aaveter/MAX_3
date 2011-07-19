@@ -10,7 +10,8 @@
 	import flash.display.StageQuality;
 
 	public class Game extends Sprite
-	{		
+	{
+		public static var mapType:String = "standart";//Тип карты
 		public static const map_x:int = 250;//Карта сдвинаута по x
 		public static const map_y:int = 0;//Карта сдвинаута по y
 		public static const cell_pixels:int = 100;//Количество пикселей из которого состоит клетка.
