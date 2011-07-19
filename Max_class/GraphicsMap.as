@@ -1,76 +1,61 @@
-﻿package Max_class
-{
-	import Main.Game;
-	import flash.geom.Rectangle;
+﻿package Max_class {
+	
+	import flash.net.URLLoader;
 	import flash.display.Sprite;
 	import flash.geom.Point;
-
-	public class MaxMap extends Sprite
-	{
-		var map:Sprite=new Sprite();
-		var map_units:Sprite=new Sprite();
-		var setka:Sprite=new Sprite();
-		//var elements:Array=new Array();
-
-		//map_size - размер карты
-		//cell - массив всех клеток карты
+	
+	public class GraphicsMap extends MapClass {
 		
-		
+		var elements:Array = null;
+		var ground:String;
 
-		public function MaxMap(mapObject:MapClass)
-		{
-			var map_place:Sprite;
-			addChild(map_units);
-			addChild(map);
-			addChild(setka);
-			//Функция оптимизирующая затраты на графическую визуализацию
-						
-			mapObject.draw(map);
-						
-			initSetka(mapObject.width);
-			//initStandartMap(map_size,cell);
+		public function GraphicsMap() {
+			// constructor code
 		}
 		
-		public function initSetka(map_size:int) {
-			setka.graphics.lineStyle(2);
-			for (var i:int = 0; i < map_size; i++) {
-				setka.graphics.moveTo(i*100,0);
-				setka.graphics.lineTo(i*100,map_size*100);
+		override public function load(loader:URLLoader) {
+			
+			if (elements != null) return;
+			
+			// + map_type
+			// + version
+			// + ground
+			ground = "green";
+			
+			var map_size:int = loader.data.readInt();
+			width = map_size;
+			height = map_size;
+			var objects_count:int = loader.data.readInt();
+			
+			elements = new Array();
+			
+			for (var k:int = 0; k < objects_count; ++k) {
+				var me:MapElement = null;
+				var obj_type:int = loader.data.readInt();
+				if (obj_type == 1) {
+					me = new MapElement("water");
+				} else {
+					me = new MapElement("green");
+				}
+				elements[k] = me;
+				var obj_points:int = loader.data.readInt();
+				for (var g:int = 0; g < obj_points; ++g) {
+					var obj_x:int = loader.data.readInt();
+					var obj_y:int = loader.data.readInt();
+					me.addPoint(new MapPoint(obj_x,obj_y));
+				}
 			}
-			for (i = 0; i < map_size; i++) {
-				setka.graphics.moveTo(0,i*100);
-				setka.graphics.lineTo(map_size*100,i*100);
-			}
+			
 		}
 		
-		public function initGraphicsMap(map_size:Number,cell:Array) {
+		override public function draw( map:Sprite, cell_size:Number = 100 ) {
+			var col:int = 0;
+			if (ground == "green") col = 0x00FF00;
+			else if (ground == "water") col = 0x0000FF;
 			
-			/*map.graphics.beginFill(0x00FF00);
-			map.graphics.drawRect(0,0,map_size*100,map_size*100);
-			map.graphics.endFill();			
-			
-			var me:MapElement = new MapElement("water");
-			elements[0] = me;
-			me.addPoint(new MapPoint(350,350));
-			me.addPoint(new MapPoint(520,350));
-			me.addPoint(new MapPoint(550,380));
-			me.addPoint(new MapPoint(550,520));
-			me.addPoint(new MapPoint(520,550));
-			me.addPoint(new MapPoint(350,550));
-
-			var me2:MapElement = new MapElement("water");
-			elements[1] = me2;
-			me2.addPoint(new MapPoint(700,430));
-			me2.addPoint(new MapPoint(780,400));
-			me2.addPoint(new MapPoint(850,460));
-			me2.addPoint(new MapPoint(990,290));
-			me2.addPoint(new MapPoint(1060,150));
-			me2.addPoint(new MapPoint(1240,700));
-			me2.addPoint(new MapPoint(1030,670));
-			me2.addPoint(new MapPoint(820,590));
-			me2.addPoint(new MapPoint(770,530));
-
-			
+			map.graphics.beginFill(col);
+			map.graphics.drawRect(0,0,width*cell_size,height*cell_size);
+			map.graphics.endFill();
 			
 			for (var i:int=0; i < elements.length; i++) {
 				var ucol:int;
@@ -89,7 +74,7 @@
 				var poLast:MapPoint = elements[i].points[poLength-1];
 				var preLast:MapPoint = elements[i].points[poLength-2];
 				
-				map.graphics.moveTo(poLast.x,poLast.y);
+				map.graphics.moveTo(poLast.x*cell_size/standart_cell_size, poLast.y*cell_size/standart_cell_size);
 				
 				for (var j:int=0; j < poLength; j++) {
 					var po:MapPoint = elements[i].points[j];
@@ -103,20 +88,10 @@
 					var dx:int = 0;
 					var dy:int = 0;
 					
-					//if (preLast.x > poNext.x) 
-					dx = preLast.x - poNext.x;//poLast.x - po.x;
-					//else dx = poNext.x - preLast.x;
+					dx = preLast.x - poNext.x;
+					dy = preLast.y - poNext.y;
 					
-					//if (preLast.y > poNext.y) 
-					dy = preLast.y - poNext.y;//poLast.y - po.y;
-					//else dy = poNext.y - preLast.y;
-					
-					var xPlus:int = 0;//10;
-					var yPlus:int = 0;//10;
-					
-					//if (poLast.x )
-					
-					var poMezdu:MapPoint = new MapPoint(preLast.x - dx/2 + xPlus, preLast.y - dy/2 + yPlus); 
+					var poMezdu:MapPoint = new MapPoint(preLast.x - dx/2, preLast.y - dy/2); 
 					
 					var a:Point = new Point(poLast.x,poLast.y);
 					var b:Point = new Point(po.x,po.y);
@@ -127,7 +102,6 @@
 					var rSr:int = (r1 + r2)/2;
 					
 					var poMid:Point = new Point(poLast.x - (poLast.x-po.x)/2, poLast.y - (poLast.y-po.y)/2);
-					//map.graphics.drawCircle(poMid.x,poMid.y,4);
 					
 					var mdx:int = poMezdu.x - poMid.x;
 					var mdy:int = poMezdu.y - poMid.y;
@@ -138,11 +112,8 @@
 					
 					var rezPo:Point = new Point(poMezdu.x - mdx*sca, poMezdu.y - mdy*sca);
 					
-					//map.graphics.moveTo(poMid.x,poMid.y);
-					//map.graphics.lineTo(poMezdu.x,poMezdu.y);
-					//map.graphics.lineTo(rezPo.x,rezPo.y);
-					
-					map.graphics.curveTo(rezPo.x,rezPo.y, po.x,po.y);
+					map.graphics.curveTo(rezPo.x*cell_size/standart_cell_size, rezPo.y*cell_size/standart_cell_size, 
+										 po.x*cell_size/standart_cell_size, po.y*cell_size/standart_cell_size);
 					
 					preLast = poLast;
 					poLast = po;
@@ -151,7 +122,7 @@
 				map.graphics.endFill();
 				
 				
-				map.graphics.lineStyle(2,0xFF0000);
+				/*map.graphics.lineStyle(2,0xFF0000);
 				map.graphics.beginFill(0xFF0000);
 				
 				poLast = elements[i].points[poLength-1];
@@ -250,26 +221,23 @@
 					preLast = poLast;
 					poLast = po;
 				}
-				map.graphics.endFill();
+				map.graphics.endFill();*/
 				
-			}*/
+			}
 			
 			//setka.graphics.beginFill(0xFF0000);
-			setka.graphics.lineStyle(2);
+			/*setka.graphics.lineStyle(2);
 			for (var i:int = 0; i < map_size; i++) {
 				setka.graphics.moveTo(i*100,0);
 				setka.graphics.lineTo(i*100,map_size*100);
 			}
-			for (i = 0; i < map_size; i++) {
+			for (var i:int = 0; i < map_size; i++) {
 				setka.graphics.moveTo(0,i*100);
 				setka.graphics.lineTo(map_size*100,i*100);
-			}
+			}*/
 			
 		}
-		
-		public function initStandartMap(map_size:Number,cell:Array) {
 
-			
-		}
 	}
+	
 }

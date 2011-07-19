@@ -8,6 +8,9 @@
 	{
 		public function kadr_1(stage)
 		{
+			var fon:KadrFon = new KadrFon(Game.doc_x, Game.doc_y);
+			addChild(fon);
+			
 			var colors:Array = new Array(0xFF0000,0xFFFF00,0xFF00FF,0x00FFFF,0x333300);//массив цветов для игроков
 			var n_txt:Array = new Array("2","3","4","5");//Массив значений для круглых кнопок
 			var r:Panel_rb = new Panel_rb(n_txt,4,0x0000FF,0x00FF99,0x00FF99,0x0000FF,0);
@@ -40,7 +43,7 @@
 				u = new Panel_txt(colors,r.ch.txt.text,"игрок",r.width);
 				addChild(u);
 				u.x = (Game.doc_x-u.width)/2;
-				u.y = r.y + r.height + 20;
+				u.y = r.y + r.height + 50;
 				b = new Button_press(Formats.Static);
 				b.addEventListener(MouseEvent.CLICK,press_b);
 				addChild(b);

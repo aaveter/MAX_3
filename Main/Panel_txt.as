@@ -24,6 +24,9 @@
 				all_txt[cur_txt].setTextFormat(Formats.Input);
 				all_txt[cur_txt].type = TextFieldType.INPUT;
 				all_txt[cur_txt].y = (all_txt[cur_txt].height+dist)*(cur_txt-1);
+				
+				all_txt[cur_txt].background = true;
+				all_txt[cur_txt].backgroundColor = 0xcccccc;
 
 				all_bc[cur_txt] = new Color_box(colors[cur_txt],l / 5,all_txt[cur_txt].height,colors,lcb);
 				all_bc[cur_txt].x = l * 4 / 5;

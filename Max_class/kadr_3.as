@@ -23,6 +23,7 @@
 		var scr:Scroll_menu = null;
 		var mini_map:MaxMiniMap = null;
 		var Z:Zoom_b = null;
+		
 		override public function set width(w:Number):void
 		{
 			scr.resize_me(Game.visible_map_x,Game.visible_map_y);
@@ -33,14 +34,17 @@
 			scr.resize_me(Game.visible_map_x,Game.visible_map_y);
 		}
 
-		public function kadr_3(urlLoaderMap:URLLoader)
+		public function kadr_3(mapObject:MapClass)
 		{
-			ML = new MaxMapLoader(urlLoaderMap);
-			map = new MaxMap(ML.map_size,ML.cell);
+			var fon:KadrFon = new KadrFon(Game.doc_x, Game.doc_y);
+			addChild(fon);
+			
+			//ML = new MaxMapLoader(urlLoaderMap);
+			map = new MaxMap(mapObject);
 			scroll_place.addChild(map_place);
 			map_place.addChild(map);
 			scr = new Scroll_menu(scroll_place,map_place,Arrow,bar_box,0x0000FF,2,30,100,Game.visible_map_y,Game.visible_map_x);
-			mini_map = new MaxMiniMap(ML.map_size,ML.cell,200,200,scr.rect);
+			mini_map = new MaxMiniMap(mapObject,200,200,scr.rect);
 			Z = new Zoom_b(scr.rect,map_place,map);
 
 			scroll_place.x = 210;

@@ -12,7 +12,7 @@
 		Static.bold = true;
 		Static.size = 18;
 		Static.font = "Tahoma";
-		Static.color = 0x999999;
+		Static.color = 0x000099;
 		Static.align = TextFormatAlign.CENTER;
 		
 		Input.bold = true;
