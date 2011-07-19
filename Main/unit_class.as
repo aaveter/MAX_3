@@ -24,7 +24,7 @@
 		public var scan:Number;//Видимая зона вокруг юнита
 		public var build:String = "false";//Параметр показывает строит ли юнит здания. (true or false)
 		var cur_hp:Number,max_hp:Number;//Текущее и максимальное кол-во жизней
-		var sel:Number = 0;
+		var sel:Number = 0;// Показывает выбран юнит или нет
 		public var gor:Number = 0,vert:Number = 0;//Горизонтальное и вертикальное положение юнита на карте
 
 		public function unit_class()

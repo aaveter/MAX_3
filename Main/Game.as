@@ -15,7 +15,7 @@
 		public static const map_y:int = 0;//Карта сдвинаута по y
 		public static const cell_pixels:int = 100;//Количество пикселей из которого состоит клетка.
 		public static const mini_cs:int = 4;//Размер одной клетки на мини-карте в пикселях.
-		public static const pd:Number = 10;//Минимальное расстояние между игроками
+		public static const pd:Number = 5;//Минимальное расстояние между игроками, а так же между игроком и краем карты.
 		public static const mmd:int = 10;//Расстояние между мини-картами при выборе карты для игры
 		public static const green:BitmapData=new green_class(0,0)
 		public static const water:BitmapData=new water_class(0,0)
@@ -25,13 +25,19 @@
 		public static const montain_dark:BitmapData=new montain_dark_class(0,0)
 		public static var cell_size = cell_pixels;//Размер клетки изначальна она равна кол-ву пикселей, но при маштабировании будет меняться.
 		public static var step:int = 0;//Указывает номер хода в игре
+		public static var scan_zone:Sprite=new Sprite
+		public static var mini_scan_zone:Sprite=new Sprite
+		public static var scan_area:Array=new Array()
+		public static var mini_scan_area:Array=new Array()
 
 		public static var visible_map_x:int = 700;//Размер показываемой карты по X
 		public static var visible_map_y:int = 700;//Размер показываемой карты по Y	
 		public static var doc_x:int = 100;//Размер документа по x
-		public static var doc_y:int = 100;//Размер документа по 
+		public static var doc_y:int = 100;//Размер документа по y
+		
+		public static var Players:Array=new Array()//Массив игроков, построенныех на классе Player
 
-		private static var stage_:Stage = null; // ссылка на сцену
+		public static var stage_:Stage = null; // ссылка на сцену
 		private static var kadr_:Sprite = null; // ссылка на текущий кадр
 		private static var game_:Game = null; // ссылка на себя саму
 

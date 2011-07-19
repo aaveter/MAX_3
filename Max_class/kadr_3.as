@@ -3,6 +3,7 @@
 	import Max_class.MaxMap;
 	import Max_class.MaxMapLoader;
 	import Max_class.MaxMiniMap;
+	import Max_class.Start_location;
 	import Main.Zoom_b;
 	import Main.Scroll_menu;
 	import Main.Game;
@@ -15,37 +16,37 @@
 
 	public class kadr_3 extends Sprite
 	{
-		var ML:MaxMapLoader = null;
-		var scroll_place:Sprite=new Sprite();
+		var ML:MaxMapLoader = null;		
 		var map_place:Sprite=new Sprite();
 		var rect:Rectangle = new Rectangle(0,0,Game.visible_map_x,Game.visible_map_y);
 		var map:MaxMap = null;
 		var scr:Scroll_menu = null;
 		var mini_map:MaxMiniMap = null;
 		var Z:Zoom_b = null;
+		var SL:Start_location = null
 		override public function set width(w:Number):void
 		{
 			scr.resize_me(Game.visible_map_x,Game.visible_map_y);
+			SL.resize_me(this)
 		}
 
 		override public function set height(h:Number):void
 		{
 			scr.resize_me(Game.visible_map_x,Game.visible_map_y);
+			SL.resize_me(this)
 		}
 
 		public function kadr_3(urlLoaderMap:URLLoader)
 		{
 			ML = new MaxMapLoader(urlLoaderMap);
-			map = new MaxMap(ML.map_size,ML.cell);
-			scroll_place.addChild(map_place);
+			map = new MaxMap(ML.map_size,ML.cell);			
 			map_place.addChild(map);
-			scr = new Scroll_menu(scroll_place,map_place,Arrow,bar_box,0x0000FF,2,30,100,Game.visible_map_y,Game.visible_map_x);
+			scr = new Scroll_menu(map_place,Arrow,bar_box,0x0000FF,2,30,100,Game.visible_map_y,Game.visible_map_x);
 			mini_map = new MaxMiniMap(ML.map_size,ML.cell,200,200,scr.rect);
 			Z = new Zoom_b(scr.rect,map_place,map);
-
-			scroll_place.x = 210;
-			scroll_place.y = 5;
-			addChild(scroll_place);
+			addChild(scr);
+			scr.x = 210;
+			scr.y = 5;			
 			addChild(mini_map);
 			addChild(Z);
 			mini_map.x = 5;
@@ -55,6 +56,7 @@
 			addEventListener(MouseEvent.MOUSE_MOVE,moving);
 			addEventListener(MouseEvent.CLICK,replace);
 
+			SL = new Start_location(this,map_place,mini_map,map,scr);
 			function moving(ev:MouseEvent)
 			{
 				if (ev.buttonDown == true)

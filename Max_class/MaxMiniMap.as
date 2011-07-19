@@ -18,9 +18,9 @@
 		//h - размер мини карты по Y
 		//r - видимая часть карты (используется для прокрутки карты через мини)
 		public function MaxMiniMap(map_size:Number,cell:Array,w:Number=200,h:Number=200,r:Rectangle=null)
-		{
-			addChild(mini_map_units);
+		{			
 			addChild(mini_map);
+			addChild(mini_map_units);
 			addChild(border_mm);
 			var gor_start:int = new int  ;
 			var vert_start:int = new int  ;

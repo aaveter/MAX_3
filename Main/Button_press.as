@@ -8,7 +8,7 @@
 	public class Button_press extends Sprite
 	{
 		var txt:TextField = new TextField  ;
-		public function Button_press(f,t:String="ОК")
+		public function Button_press(f:TextFormat,t:String="ОК")
 		{
 			var up:Sprite=new Sprite();
 			var down:Sprite=new Sprite();
@@ -27,14 +27,14 @@
 			down.width = txt.textWidth + 30;
 			up.x = s;
 			txt.x = 20;
-			txt.y = 5;			
+			txt.y = 5;
 			this.addChild(down);
 			this.addChild(up);
 			this.addChild(txt);
 
 			up.addEventListener(MouseEvent.MOUSE_OVER,over);
 			up.addEventListener(MouseEvent.MOUSE_OUT,out);
-			up.addEventListener(MouseEvent.MOUSE_DOWN,down_b);			
+			up.addEventListener(MouseEvent.MOUSE_DOWN,down_b);
 
 			function over()
 			{
@@ -90,6 +90,11 @@
 					out();
 				}
 			}
+		}
+		public function replace(STAGE:Stage)
+		{
+			x=(STAGE.stageWidth-width)/2;
+			y=(STAGE.stageHeight-height)/2;
 		}
 	}
 }
