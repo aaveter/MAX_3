@@ -15,8 +15,7 @@
 			var n_txt:Array = new Array("2","3","4","5");//Массив значений для круглых кнопок
 			var r:Panel_rb = new Panel_rb(n_txt,4,0x0000FF,0x00FF99,0x00FF99,0x0000FF,0);
 			var u:Panel_txt;
-			var b:Button_press;
-			var Players:Array=new Array();
+			var b:Button_press;			
 			var p:Number=new Number();
 
 			refreshSizes();
@@ -54,7 +53,7 @@
 			{
 				for (var i:int=0; i<p; i++)
 				{
-					Players[i] = new Player(u.all_txt[i].text,u.all_bc[i].color);
+					Game.Players[i] = new Player(u.all_txt[i].text,u.all_bc[i].color);					
 				}
 				
 				

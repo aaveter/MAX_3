@@ -20,8 +20,7 @@
 		var size:Number = new Number  ;//размер видимой части карты  ;
 		var xyz:int = new int  ;//Определяет какие варианты скроллбаров имеются
 
-		//r - прямоугольник видимости
-		//stp - место где лежит объект прокрутки, туда же кладем и скролл бар
+		//r - прямоугольник видимости		
 		//st - объект который будем прокручивать,
 		//ar - отрисованная стрелка, она должна быть отцентрализована (коры 0,0 по середине)
 		//b - объект который передвигаем для воздействия на главный объект
@@ -31,7 +30,7 @@
 		//sw - указывает насколько прокручиваем
 		//size - высота места под бар
 
-		public function ScrollBar(r:Rectangle,stp:Sprite,st:Sprite,ar:Class,b:Class,cbord:uint,z:Number=0,w_all:int=50,sw:Number=10,sz:Number=200)
+		public function ScrollBar(r:Rectangle,st:Sprite,ar:Class,b:Class,cbord:uint,z:Number=0,w_all:int=50,sw:Number=10,sz:Number=200)
 		{
 			var wback:int = 46;
 			var wbord:int = 2;

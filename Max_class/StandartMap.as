@@ -70,14 +70,28 @@
 						}
 						if (cell[gor_start][vert_start]["type"]=="green") {
 							map.graphics.beginFill(0x00FF00);
+							if (map_units!=null) {
+								map_units.graphics.beginFill(0x33FF33);
+							}
 						} else if (cell[gor_start][vert_start]["type"]=="water") {
 							map.graphics.beginFill(0x9999FF);
+							if (map_units!=null) {
+								map_units.graphics.beginFill(0xCCCCFF);
+							}
 						} else if (cell[gor_start][vert_start]["type"]=="montain") {
 							map.graphics.beginFill(0x999999);
+							if (map_units!=null) {
+								map_units.graphics.beginFill(0xCCCCCC);
+							}
 						}
 						map.graphics.drawRect(gor_start*cell_size, vert_start*cell_size, 
 													   cell_size*gor_length, cell_size*vert_length);
 						map.graphics.endFill();
+						if (map_units!=null) {
+							map_units.graphics.drawRect(gor_start*cell_size, vert_start*cell_size, 
+													   cell_size*gor_length, cell_size*vert_length);
+							map_units.graphics.endFill();
+						}
 						vert=vert_start+vert_length-1;
 						gor=gor_start;
 					}

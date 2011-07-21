@@ -3,15 +3,14 @@
 	import Main.Game;
 	import flash.geom.Rectangle;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 
 	public class MaxMap extends Sprite
 	{
-		var map:Sprite=new Sprite();
-		var map_units:Sprite=new Sprite();
-		var setka:Sprite=new Sprite();
-		//var elements:Array=new Array();
-
+		public var map:Sprite = new Sprite  ;
+		public var map_units:Sprite = new Sprite  ;
+		var setka:Sprite = new Sprite  ;
 		//map_size - размер карты
 		//cell - массив всех клеток карты
 		
@@ -19,11 +18,14 @@
 
 		public function MaxMap(mapObject:MapClass)
 		{
-			var map_place:Sprite;
-			addChild(map_units);
 			addChild(map);
+			addChild(map_units);
 			addChild(setka);
 			//Функция оптимизирующая затраты на графическую визуализацию
+			var gor_start:int = new int  ;
+			var vert_start:int = new int  ;
+			var gor_length:int = new int  ;
+			var vert_length:int = new int  ;
 						
 			mapObject.draw(map, 100, map_units);
 						

@@ -19,13 +19,13 @@
 		//r - видимая часть карты (используется для прокрутки карты через мини)
 		public function MaxMiniMap(mapObject:MapClass,w:Number=200,h:Number=200,r:Rectangle=null)
 		{
-			addChild(mini_map_units);
 			addChild(mini_map);
+			addChild(mini_map_units);
 			addChild(border_mm);
 			
 			rect = r;
 			
-			mapObject.draw(mini_map, Game.mini_cs);
+			mapObject.draw(mini_map, Game.mini_cs, mini_map_units);
 			
 			border_mm.width = Game.visible_map_x / Game.cell_size * Game.mini_cs;
 			border_mm.height = Game.visible_map_y / Game.cell_size * Game.mini_cs;
