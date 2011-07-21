@@ -48,7 +48,7 @@
 			
 		}
 		
-		override public function draw( map:Sprite, cell_size:Number = 100 ) {
+		override public function draw( map:Sprite, cell_size:Number = 100, map_units:Sprite = null ) {
 			var col:int = 0;
 			if (ground == "green") col = 0x00FF00;
 			else if (ground == "water") col = 0x0000FF;
@@ -56,6 +56,12 @@
 			map.graphics.beginFill(col);
 			map.graphics.drawRect(0,0,width*cell_size,height*cell_size);
 			map.graphics.endFill();
+			
+			if (map_units!=null) {
+				map_units.graphics.beginFill(col-30);
+				map_units.graphics.drawRect(0,0,width*cell_size,height*cell_size);
+				map_units.graphics.endFill();
+			}
 			
 			for (var i:int=0; i < elements.length; i++) {
 				var ucol:int;
@@ -75,6 +81,11 @@
 				var preLast:MapPoint = elements[i].points[poLength-2];
 				
 				map.graphics.moveTo(poLast.x*cell_size/standart_cell_size, poLast.y*cell_size/standart_cell_size);
+				if (map_units!=null) {
+					map_units.graphics.lineStyle(2,ucol-30);
+					map_units.graphics.beginFill(ucol-30);
+					map_units.graphics.moveTo(poLast.x*cell_size/standart_cell_size, poLast.y*cell_size/standart_cell_size);
+				}
 				
 				for (var j:int=0; j < poLength; j++) {
 					var po:MapPoint = elements[i].points[j];
@@ -114,6 +125,10 @@
 					
 					map.graphics.curveTo(rezPo.x*cell_size/standart_cell_size, rezPo.y*cell_size/standart_cell_size, 
 										 po.x*cell_size/standart_cell_size, po.y*cell_size/standart_cell_size);
+					if (map_units!=null) {
+						map_units.graphics.curveTo(rezPo.x*cell_size/standart_cell_size, rezPo.y*cell_size/standart_cell_size, 
+										 po.x*cell_size/standart_cell_size, po.y*cell_size/standart_cell_size);
+					}
 					
 					preLast = poLast;
 					poLast = po;

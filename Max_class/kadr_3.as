@@ -23,22 +23,24 @@
 		var scr:Scroll_menu = null;
 		var mini_map:MaxMiniMap = null;
 		var Z:Zoom_b = null;
-		
+
 		override public function set width(w:Number):void
 		{
 			scr.resize_me(Game.visible_map_x,Game.visible_map_y);
+			//SL.resize_me(this);
 		}
 
 		override public function set height(h:Number):void
 		{
 			scr.resize_me(Game.visible_map_x,Game.visible_map_y);
+			//SL.resize_me(this);
 		}
 
 		public function kadr_3(mapObject:MapClass)
 		{
-			var fon:KadrFon = new KadrFon(Game.doc_x, Game.doc_y);
+			var fon:KadrFon = new KadrFon(Game.doc_x,Game.doc_y);
 			addChild(fon);
-			
+
 			//ML = new MaxMapLoader(urlLoaderMap);
 			map = new MaxMap(mapObject);
 			scroll_place.addChild(map_place);
@@ -58,7 +60,7 @@
 			Z.y = 5;
 			addEventListener(MouseEvent.MOUSE_MOVE,moving);
 			addEventListener(MouseEvent.CLICK,replace);
-
+			//SL = new Start_location(this,map_place,mini_map,map,scr);
 			function moving(ev:MouseEvent)
 			{
 				if (ev.buttonDown == true)

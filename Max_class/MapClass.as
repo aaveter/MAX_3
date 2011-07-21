@@ -19,7 +19,7 @@
 			
 		}
 		
-		public function draw( map:Sprite, cell_size:Number = 100 ) {
+		public function draw( map:Sprite, cell_size:Number = 100, map_units:Sprite = null ) {
 			
 		}
 

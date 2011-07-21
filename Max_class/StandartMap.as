@@ -40,7 +40,7 @@
 			}
 		}
 		
-		override public function draw( map:Sprite, cell_size:Number = 100 ) {
+		override public function draw( map:Sprite, cell_size:Number = 100, map_units:Sprite = null ) {
 			var map_size:int = width;
 			
 			for (var gor:int = 0; gor<map_size; gor++) {

@@ -136,10 +136,10 @@
 				
 				//trace("type = " + urlLoader.data["map" + (i+1).toString() + "_type"]);
 				if ( urlLoader.data["map" + (i+1).toString() + "_type"] == "graphics") {
-					Game.mapType = "graphics";
+					//Game.mapType = "graphics";
 					urlLoaderMap[i].addEventListener(Event.COMPLETE, maps_completeGraphics);
 				} else {
-					Game.mapType = "standart";
+					//Game.mapType = "standart";
 					urlLoaderMap[i].addEventListener(Event.COMPLETE, maps_complete);
 				}
 				
