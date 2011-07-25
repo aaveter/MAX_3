@@ -2,12 +2,14 @@
 {
 	import Main.*;
 	import flash.display.*;
+	
 	public class ingener extends unit_class
 	{
 		public function ingener()
 		{
-			bmp = new ingener_bmp  ;//Картинка как выглядит юнит
-			addChild(bmp)			
+			bmp = new ingener_bmp
+			addChild(bmp)
+			
 			unit_name = "Инженер";//Наименование юнита
 			hp = 18;//Кол-во жизней юнита
 			armor = 4;//Броня юнита уменьшает наносимый урон

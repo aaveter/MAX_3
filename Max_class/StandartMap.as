@@ -11,6 +11,7 @@
 		var vert_start:int = new int;
 		var gor_length:int = new int;
 		var vert_length:int = new int;
+		var map_size:int = new int;
 
 		public function StandartMap() {
 			// constructor code
@@ -18,7 +19,7 @@
 		
 		override public function load(loader:URLLoader) {
 			loader.data.position = 0;
-			var map_size:int = loader.data.readInt();
+			map_size = loader.data.readInt();
 			width = map_size;
 			height = map_size;
 			
@@ -41,7 +42,6 @@
 		}
 		
 		override public function draw( map:Sprite, cell_size:Number = 100, map_units:Sprite = null ) {
-			var map_size:int = width;
 			
 			for (var gor:int = 0; gor<map_size; gor++) {
 				gor_start=gor;

@@ -7,8 +7,8 @@
 
 	public class MaxMiniMap extends Sprite
 	{
-		var mini_map:Sprite=new Sprite();
-		var mini_map_units:Sprite=new Sprite();
+		public var mini_map:Sprite=new Sprite();
+		public var mini_map_units:Sprite=new Sprite();
 		public var border_mm:Sprite = new border_class  ;
 		var rect:Rectangle
 

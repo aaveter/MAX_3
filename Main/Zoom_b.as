@@ -33,6 +33,7 @@
 					mmp=mmp/2
 					zt.width = zt.width / 2;
 					zt.height = zt.height / 2;
+					Game.cell_size=Game.cell_size/2
 					rect.x = rect.x / 2 - rect.width / 4;
 					rect.y = rect.y / 2 - rect.height / 4;
 					if (rect.x < 0)
@@ -62,6 +63,7 @@
 					mmp=mmp*2
 					zt.width = zt.width * 2;
 					zt.height = zt.height * 2;
+					Game.cell_size=Game.cell_size*2
 					rect.x = rect.x * 2 + rect.width / 2;
 					rect.y = rect.y * 2 + rect.height / 2;
 					zoom();

@@ -150,9 +150,12 @@
 			}
 		}
 		
-		function mm_click(event:MouseEvent) {	
-			i=Math.floor((mouseX-mini_maps_place.x)/(Game.map_x+Game.mmd))
-				+qx*Math.floor((mouseY-mini_maps_place.y)/(Game.map_x+Game.mmd));
+		function mm_click(event:MouseEvent) {
+			for (var j:int=0; j<mini_maps.length; ++j) {
+				if (mini_maps[j]==event.currentTarget) {
+					i = j;
+				}
+			}
 			cmm.x=(Game.map_x+Game.mmd)*(i-qx*Math.floor(i/qx))+20;
 			cmm.y=(Game.map_x+Game.mmd+20)*Math.floor(i/qx)+20;
 		}

@@ -7,8 +7,8 @@
 	import flash.utils.Timer;
 	import flash.ui.Mouse;
 	import Max_class.MaxMiniMap;
-	import Max_class.MaxMap
-	import Units.*
+	import Max_class.MaxMap;
+	import Units.*;
 
 	public class Start_location
 	{
@@ -27,7 +27,7 @@
 			next_player();
 			map.addEventListener(MouseEvent.MOUSE_DOWN,mp_down);
 			mc.mouseEnabled = false;
-			map.addEventListener(MouseEvent.MOUSE_OVER,cursor_add);			
+			map.addEventListener(MouseEvent.MOUSE_OVER,cursor_add);
 			function next_player()
 			{
 				BP = new Button_press(Formats.Static,str);
@@ -41,7 +41,7 @@
 				{
 					kadr.removeChild(BP);
 					kadr.removeChild(Sh);
-					BP.removeEventListener(MouseEvent.CLICK,bp_click);					
+					BP.removeEventListener(MouseEvent.CLICK,bp_click);
 				}
 			}
 
@@ -174,11 +174,11 @@
 				for (player = 0; player < Game.Players.length; player++)
 				{
 					Game.Players[player].units[0] = new ingener  ;
-					Game.Players[player].units[0].create_unit(m.map_units,mini_map.mini_map_units,Game.Players[player].sl.x,Game.Players[player].sl.y,Game.Players[player].color,Game.cell_pixels,Game.mini_cs);
+					Game.Players[player].units[0].create_unit(m,mini_map,Game.Players[player].sl.x,Game.Players[player].sl.y,Game.Players[player].color,Game.mini_cs);
 					Game.Players[player].units[1] = new construct  ;
-					Game.Players[player].units[1].create_unit(m.map_units,mini_map.mini_map_units,Game.Players[player].sl.x + 1,Game.Players[player].sl.y,Game.Players[player].color,Game.cell_pixels,Game.mini_cs);
+					Game.Players[player].units[1].create_unit(m,mini_map,Game.Players[player].sl.x + 1,Game.Players[player].sl.y,Game.Players[player].color,Game.mini_cs);
 					Game.Players[player].units[2] = new scout  ;
-					Game.Players[player].units[2].create_unit(m.map_units,mini_map.mini_map_units,Game.Players[player].sl.x + 1,Game.Players[player].sl.y + 1,Game.Players[player].color,Game.cell_pixels,Game.mini_cs);
+					Game.Players[player].units[2].create_unit(m,mini_map,Game.Players[player].sl.x + 1,Game.Players[player].sl.y + 1,Game.Players[player].color,Game.mini_cs);
 				}
 			}
 
@@ -186,7 +186,7 @@
 			function next_step()
 			{
 				str = "Ход " + Game.step + " " + Game.Players[player].name;
-				next_player()
+				next_player();
 				BP.addEventListener(MouseEvent.CLICK,next_zone);
 			}
 			function next_zone(event:MouseEvent)
@@ -200,22 +200,22 @@
 				//Теперь перебираем сканы всех юнитов и создаем области видимости с помощью mask;
 				for (var pu = 0; pu < Game.Players[player].units.length; pu++)
 				{
-					Game.scan_area[pu] = new Sprite  ;
-					Game.mini_scan_area[pu] = new Sprite  ;
-					Game.scan_area[pu].graphics.clear();
-					Game.mini_scan_area[pu].graphics.clear();
-					var xx:int = (Game.Players[player].units[pu].gor - 0.5) * Game.cell_pixels;
-					var yy:int = (Game.Players[player].units[pu].vert - 0.5) * Game.cell_pixels;					
-					var mini_xx:int = (Game.Players[player].units[pu].gor - 0.5) * Game.mini_cs;
-					var mini_yy:int = (Game.Players[player].units[pu].vert - 0.5) * Game.mini_cs;
-					var scan:int = Game.Players[player].units[pu].scan * Game.cell_pixels;
-					var mini_scan:int = Game.Players[player].units[pu].scan * Game.mini_cs;
-					Game.scan_area[pu].graphics.beginFill(0x000099);
-					Game.mini_scan_area[pu].graphics.beginFill(0x000099);
-					Game.scan_area[pu].graphics.drawCircle(xx,yy,scan);
-					Game.mini_scan_area[pu].graphics.drawCircle(mini_xx,mini_yy,mini_scan);
-					Game.scan_zone.addChild(Game.scan_area[pu]);
-					Game.mini_scan_zone.addChild(Game.mini_scan_area[pu]);
+					Game.scan_zone.addChild(Game.Players[player].units[pu].scan_area);
+					Game.mini_scan_zone.addChild(Game.Players[player].units[pu].mini_scan_area);
+					//Game.scan_area[pu] = new Sprite  ;
+					//Game.mini_scan_area[pu] = new Sprite  ;
+					//Game.scan_area[pu].graphics.clear();
+					//Game.mini_scan_area[pu].graphics.clear();
+					//var xx:int = (Game.Players[player].units[pu].gor - 0.5) * Game.cell_pixels;
+					//var yy:int = (Game.Players[player].units[pu].vert - 0.5) * Game.cell_pixels;
+					//var mini_xx:int = (Game.Players[player].units[pu].gor - 0.5) * Game.mini_cs;
+					//var mini_yy:int = (Game.Players[player].units[pu].vert - 0.5) * Game.mini_cs;
+					//var scan:int = Game.Players[player].units[pu].scan * Game.cell_pixels;
+					//var mini_scan:int = Game.Players[player].units[pu].scan * Game.mini_cs;
+					//Game.scan_area[pu].graphics.beginFill(0x000099);
+					//Game.mini_scan_area[pu].graphics.beginFill(0x000099);
+					//Game.scan_area[pu].graphics.drawCircle(xx,yy,scan);
+					//Game.mini_scan_area[pu].graphics.drawCircle(mini_xx,mini_yy,mini_scan);
 				}
 			}
 			//Функция по выводу на экран текста с ошибкой

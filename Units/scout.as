@@ -1,13 +1,15 @@
 ﻿package Units
 {
 	import flash.display.*;
-	import Main.unit_class
+	import Main.*
 	
 	public class scout extends unit_class
 	{
 		public function scout()
 		{			
-			bmp = new scout_bmp  ;//Картинка как выглядит юнит
+			bmp = new scout_bmp
+			addChild(bmp)
+			
 			unit_name = "Скаут";//Наименование юнита
 			hp = 12;//Кол-во жизней юнита
 			armor = 4;//Броня юнита уменьшает наносимый урон

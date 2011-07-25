@@ -1,13 +1,13 @@
 ﻿package Units
 {
 	import flash.display.*;
-	import Main.unit_class
+	import Main.*
 	
 	public class construct extends unit_class
 	{
 		public function construct()
 		{			
-			bmp = new construct_bmp  ;//Картинка как выглядит юнит
+			addChild(new construct_bmp)
 			unit_name = "Конструктор";//Наименование юнита
 			hp = 18;//Кол-во жизней юнита
 			armor = 4;//Броня юнита уменьшает наносимый урон
