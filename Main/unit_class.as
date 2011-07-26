@@ -7,6 +7,7 @@
 	import flash.events.*;
 	import flash.utils.*;
 	import flash.geom.Point;
+	import fl.transitions.Rotate;
 
 	public class unit_class extends Sprite
 	{
@@ -31,8 +32,11 @@
 		public var scan_area:Sprite = new Sprite  ;
 		public var mini_scan_area:Sprite = new Sprite  ;
 		public var mini_bmp:Sprite = new Sprite  ;
-		var target_cell:Point = null;//Точка, в которую должен переместиться юнит
-		var point:Point = null //Временная точка, используется для проверки что мы второй раз ткунли туда же.
+		var target_x:Number=new Number();//Точка, в которую должен переместиться юнит
+		var target_y:Number=new Number();//Точка, в которую должен переместиться юнит
+		var point_x:Number=new Number();//Временная точка, используется для проверки что мы второй раз ткунли туда же.
+		var point_y:Number=new Number();//Временная точка, используется для проверки что мы второй раз ткунли туда же.
+		var path:Sprite =new Sprite();//Здесь рисуем маршрут по которому пойдет юнит
 
 		public function unit_class()
 		{
@@ -40,6 +44,7 @@
 
 		public function create_unit(m:MaxMap,mm:MaxMiniMap,g,v,color,mini_cs=4)
 		{
+			m.addChild(path);
 			mini_bmp.graphics.beginFill(color);
 			mini_bmp.graphics.drawRect(0,0,mini_cs,mini_cs);
 			scan_area.graphics.beginFill(0x000099);
@@ -67,63 +72,67 @@
 			}
 			function select_down(ev:MouseEvent)
 			{
-				var time:Timer = new Timer(100,1);
+				var time:Timer = new Timer(200,1);
 				time.start();
 				time.addEventListener(TimerEvent.TIMER_COMPLETE,compl);
 				addEventListener(MouseEvent.MOUSE_UP,select_up);
-				function compl(event:TimerEvent)
+				function compl(ev:TimerEvent)
 				{
 					removeEventListener(MouseEvent.MOUSE_UP,select_up);
 				}
 			}
 			function select_up(ev:MouseEvent)
 			{
-				//var time:Timer = new Timer(100,1);
-//				time.start();
-//				time.addEventListener(TimerEvent.TIMER_COMPLETE,compl);
-//				function compl(event:TimerEvent)
-//				{					
+				var time:Timer = new Timer(1,1);
+				time.start();
+				time.addEventListener(TimerEvent.TIMER_COMPLETE,compl);
+				function compl(ev:TimerEvent)
+				{
 					graphics.lineStyle(2,0x000000);
 					graphics.drawCircle(0,0,50);
 					m.addEventListener(MouseEvent.MOUSE_DOWN,map_down);
-				//}
+				}
 			}
 			function map_down(ev:MouseEvent)
 			{
-				var time:Timer = new Timer(100,1);
+				var time:Timer = new Timer(200,1);
 				time.start();
 				time.addEventListener(TimerEvent.TIMER_COMPLETE,compl);
-				m.addEventListener(MouseEvent.MOUSE_UP,moving);
 				m.addEventListener(MouseEvent.MOUSE_UP,deselect);
-				function compl(event:TimerEvent)
+				m.addEventListener(MouseEvent.MOUSE_UP,moving);
+				function compl(ev:TimerEvent)
 				{
-					m.removeEventListener(MouseEvent.MOUSE_UP,moving);
 					m.removeEventListener(MouseEvent.MOUSE_UP,deselect);
+					m.removeEventListener(MouseEvent.MOUSE_UP,moving);
 				}
 			}
 			function moving(ev:MouseEvent)
 			{
-				if (target_cell == null && ev.target.constructor == Sprite)
+				if (target_x == 0 && ev.target.constructor == Sprite)
 				{
-					target_cell=new Point(Math.ceil(ev.currentTarget.mouseX / Game.cell_pixels),
-										  Math.ceil(ev.currentTarget.mouseY / Game.cell_pixels))					
-					trace("choose",target_cell)
+					target_x = Math.ceil(ev.currentTarget.mouseX / Game.cell_pixels);
+					target_y = Math.ceil(ev.currentTarget.mouseY / Game.cell_pixels);
+					create_path();
+					trace("choose",target_x,target_y);
 				}
-				else if (target_cell != null && ev.target.constructor == Sprite)
+				else if (target_x != 0 && ev.target.constructor == Sprite)
 				{
-					point=new Point(Math.ceil(ev.currentTarget.mouseX / Game.cell_pixels),
-					  Math.ceil(ev.currentTarget.mouseY / Game.cell_pixels));
-					if (target_cell.x == point.x && target_cell.y == point.y)
+					path.graphics.clear();
+					point_x = Math.ceil(ev.currentTarget.mouseX / Game.cell_pixels);
+					point_y = Math.ceil(ev.currentTarget.mouseY / Game.cell_pixels);
+					if (target_x == point_x && target_y == point_y)
 					{
-						trace("place")
-						gor = Math.ceil(ev.currentTarget.mouseX / Game.cell_pixels);
-						vert = Math.ceil(ev.currentTarget.mouseY / Game.cell_pixels);
-						place();
+						trace("place");
+						//gor = Math.ceil(ev.currentTarget.mouseX / Game.cell_pixels);
+						//vert = Math.ceil(ev.currentTarget.mouseY / Game.cell_pixels);
+						create_move();
 					}
-					else if (target_cell.x != point.x && target_cell.y != point.y)
+					else if (target_x != point_x || target_y != point_y)
 					{
-						trace("=point")						
-						target_cell = point						
+						trace("=point");
+						target_x = point_x;
+						target_y = point_y;
+						create_path();
 					}
 				}
 			}
@@ -131,11 +140,140 @@
 			{
 				if (ev.ctrlKey == false && ev.target.constructor != Sprite)
 				{
-					graphics.clear();
 					m.removeEventListener(MouseEvent.MOUSE_DOWN,map_down);
-					target_cell = null;
-					point = null
+					graphics.clear();
+					path.graphics.clear();
+					target_x = 0;
+					target_y = 0;
+					point_x = 0;
+					point_y = 0;
 				}
+			}
+			function create_move()
+			{
+				var xx:int = Math.abs(target_x - gor);
+				var yy:int = Math.abs(target_y - vert);
+				var side_x:int = 1;
+				var side_y:int = 1;
+				if (target_x - gor < 0)
+				{
+					side_x = -1;
+				}
+				if (target_y - vert < 0)
+				{
+					side_y = -1;
+				}
+				//var time:Timer = new Timer(200,Math.max(xx,yy));
+				//var time_delay:int = 0;
+				//time.start();
+				//time.addEventListener(TimerEvent.TIMER,timing);
+				//function timing(ev:TimerEvent)
+				//{
+				//for_place()
+				//place();
+				//}
+				for_place();
+				function for_place()
+				{
+					var i:int = 0;
+					var j:int = 0;
+					var rot_st:Number = rotation;//Состояние повернутости на начала поворота
+					var rot_fin:Number;//Состояние повернутости на конец поворота
+					if (xx >= yy * 2)
+					{
+						xx -=  1;
+						gor +=  1 * side_x;
+						rot_fin = 90 * side_x;
+					}
+					else if (xx*2 <= yy)
+					{
+						yy -=  1;
+						vert +=  1 * side_y;
+						rot_fin = 90 + 90 * side_y;
+					}
+					else
+					{
+						xx -=  1;
+						yy -=  1;
+						rot_fin = 45 + 45 * side_x + 45 * side_y;
+						if (side_y == 1 && side_x == -1)
+						{
+							rot_fin +=  180;
+						}
+						gor +=  1 * side_x;
+						vert +=  1 * side_y;
+					}
+					var times:int = Math.abs(rot_fin - rot_st) / 5;
+					var side:int = 1;
+					if (rot_fin < rot_st)
+					{
+						side = -1;
+					}
+					if (times != 0)
+					{
+						trace(times);
+						var time:Timer = new Timer(10,times);
+						var timer:int = 0;
+						time.start();
+						time.addEventListener(TimerEvent.TIMER,timing);
+						function timing(ev:TimerEvent)
+						{
+							rotation +=  5 * side;
+							timer +=  1;
+							if (timer == times)
+							{
+								place();
+								if (gor != target_x || vert != target_y)
+								{									
+									for_place();
+								}								
+							}
+						}
+					}
+					else
+					{
+						place();
+						if (gor != target_x || vert != target_y)
+						{							
+							for_place();
+						}
+					}
+				}
+			}
+			function create_path()
+			{
+				var xx:int = Math.abs(target_x - gor);
+				var yy:int = Math.abs(target_y - vert);
+				var side_x:int = 1;
+				var side_y:int = 1;
+				if (target_x - gor < 0)
+				{
+					side_x = -1;
+				}
+				if (target_y - vert < 0)
+				{
+					side_y = -1;
+				}
+				path.graphics.beginFill(color,1);
+
+				for (var i=0,j=0; i<xx || j<yy; )
+				{
+					if (xx - i >= (yy-j) * 2)
+					{
+						i +=  1;
+					}
+					else if ((xx-i)*2 <= yy-j)
+					{
+						j +=  1;
+					}
+					else
+					{
+						i +=  1;
+						j +=  1;
+					}
+					path.graphics.drawCircle((i*side_x+gor-0.5)*Game.cell_pixels,(j*side_y+vert-0.5)*Game.cell_pixels,10);
+				}
+				path.graphics.drawCircle((target_x-0.5)*Game.cell_pixels,(target_y-0.5)*Game.cell_pixels,20);
 			}
 		}
 	}

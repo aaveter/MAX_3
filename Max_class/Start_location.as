@@ -131,14 +131,7 @@
 					{
 						map.removeChild(cl);
 						player = pl - 1;
-						//переношу карту в начальную позицию для выбора
-						scr.rect.x = 0;
-						scr.rect.y = 0;
-						map.scrollRect = scr.rect;
-						mini_map.replace();
-						scr.scroll_x.replace(scr.rect.x);
-						scr.scroll_y.replace(scr.rect.y);
-						//Конец переноса;
+						base_position();
 						player +=  1;
 						str = Game.Players[player]["name"];
 						next_player();
@@ -157,6 +150,11 @@
 						map.removeEventListener(MouseEvent.MOUSE_OUT,cursor_del);
 						map.removeEventListener(MouseEvent.MOUSE_OVER,cursor_add);
 						create_start_situation();
+						while (Game.scan_zone.numChildren != 0)
+						{
+							Game.scan_zone.removeChildAt(Game.scan_zone.numChildren - 1);
+							Game.mini_scan_zone.removeChildAt(Game.mini_scan_zone.numChildren - 1);
+						}
 						Game.step = 1;
 						player = 0;
 						next_step();
@@ -180,17 +178,38 @@
 					Game.Players[player].units[2] = new scout  ;
 					Game.Players[player].units[2].create_unit(m,mini_map,Game.Players[player].sl.x + 1,Game.Players[player].sl.y + 1,Game.Players[player].color,Game.mini_cs);
 				}
+				var NSB:Button_press = new Button_press(Formats.Static,"Следующий ход");//Кнопка для следующего хода
+				kadr.addChild(NSB);
+				NSB.x = 5;
+				NSB.y = 150;
+				NSB.addEventListener(MouseEvent.CLICK,NSB_func);
+				function NSB_func(ev:MouseEvent)
+				{
+					player +=  1;
+					if (player < Game.Players.length)
+					{
+						next_step();
+					}
+					else if (player == Game.Players.length)
+					{
+						Game.step +=  1;
+						player = 0;
+						next_step();
+					}
+				}
 			}
 
 			//Функция по выводу текста с номером хода и именем ходящего игрока;
 			function next_step()
 			{
 				str = "Ход " + Game.step + " " + Game.Players[player].name;
+				base_position();
 				next_player();
 				BP.addEventListener(MouseEvent.CLICK,next_zone);
 			}
 			function next_zone(event:MouseEvent)
 			{
+				base_position(Game.Players[player].sl.x,Game.Players[player].sl.y);
 				//Удаляю предидущую зону сканирования
 				while (Game.scan_zone.numChildren != 0)
 				{
@@ -202,20 +221,6 @@
 				{
 					Game.scan_zone.addChild(Game.Players[player].units[pu].scan_area);
 					Game.mini_scan_zone.addChild(Game.Players[player].units[pu].mini_scan_area);
-					//Game.scan_area[pu] = new Sprite  ;
-					//Game.mini_scan_area[pu] = new Sprite  ;
-					//Game.scan_area[pu].graphics.clear();
-					//Game.mini_scan_area[pu].graphics.clear();
-					//var xx:int = (Game.Players[player].units[pu].gor - 0.5) * Game.cell_pixels;
-					//var yy:int = (Game.Players[player].units[pu].vert - 0.5) * Game.cell_pixels;
-					//var mini_xx:int = (Game.Players[player].units[pu].gor - 0.5) * Game.mini_cs;
-					//var mini_yy:int = (Game.Players[player].units[pu].vert - 0.5) * Game.mini_cs;
-					//var scan:int = Game.Players[player].units[pu].scan * Game.cell_pixels;
-					//var mini_scan:int = Game.Players[player].units[pu].scan * Game.mini_cs;
-					//Game.scan_area[pu].graphics.beginFill(0x000099);
-					//Game.mini_scan_area[pu].graphics.beginFill(0x000099);
-					//Game.scan_area[pu].graphics.drawCircle(xx,yy,scan);
-					//Game.mini_scan_area[pu].graphics.drawCircle(mini_xx,mini_yy,mini_scan);
 				}
 			}
 			//Функция по выводу на экран текста с ошибкой
@@ -254,6 +259,33 @@
 				map.removeChild(mc);
 				map.removeEventListener(MouseEvent.MOUSE_MOVE,cursor_move);
 				map.removeEventListener(MouseEvent.MOUSE_OUT,cursor_del);
+			}
+			//переношу карту в начальную позицию для выбора
+			function base_position(xx:int=0,yy:int=0)
+			{
+				if (xx * Game.cell_size - Game.visible_map_x / 2 < 0)
+				{
+					xx = 0;
+				}
+				else
+				{
+					xx = xx * Game.cell_size - Game.visible_map_x / 2;
+				}
+				if (yy * Game.cell_size - Game.visible_map_y / 2 < 0)
+				{
+					yy = 0;
+				}
+				else
+				{
+					yy = yy * Game.cell_size - Game.visible_map_y / 2;
+				}
+
+				scr.rect.x = xx;
+				scr.rect.y = yy;
+				map.scrollRect = scr.rect;
+				mini_map.replace();
+				scr.scroll_x.replace(scr.rect.x);
+				scr.scroll_y.replace(scr.rect.y);
 			}
 		}
 		public function resize_me(kadr)

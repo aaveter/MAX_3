@@ -37,8 +37,8 @@
 			this.addEventListener(MouseEvent.MOUSE_MOVE,moving);
 			function replace(ev:MouseEvent)
 			{
-				border_mm.x = ev.target.mouseX - border_mm.width / 2;
-				border_mm.y = ev.target.mouseY - border_mm.height / 2;
+				border_mm.x = ev.currentTarget.mouseX - border_mm.width / 2;
+				border_mm.y = ev.currentTarget.mouseY - border_mm.height / 2;
 				if (border_mm.x < 0)
 				{
 					border_mm.x = 0;
