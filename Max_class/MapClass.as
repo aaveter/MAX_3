@@ -19,6 +19,10 @@
 			
 		}
 		
+		public function cell_type(x:int, y:int, map:Sprite, cell_size:Number = 100):String {
+			return "green";
+		}
+		
 		public function draw( map:Sprite, cell_size:Number = 100, map_units:Sprite = null ) {
 			
 		}

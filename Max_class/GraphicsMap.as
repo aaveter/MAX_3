@@ -3,6 +3,9 @@
 	import flash.net.URLLoader;
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.display.BitmapData;
+	import flash.geom.Rectangle;
+	import flash.display.Bitmap;
 	
 	public class GraphicsMap extends MapClass {
 		
@@ -46,6 +49,34 @@
 				}
 			}
 			
+		}
+		
+		override public function cell_type(x:int, y:int, map:Sprite, cell_size:Number = 100):String {
+			//map.graphics.
+			var bm:BitmapData = new BitmapData(cell_size, cell_size);
+			var rect:Rectangle = new Rectangle(x*cell_size, y*cell_size, cell_size, cell_size);
+			bm.draw(map,null,null,null,rect);
+			
+			trace(rect.toString());
+			
+			var green_count:int = new int(0);
+			for (var i:int; i<cell_size; ++i) {
+				for (var j:int; j<cell_size; ++j) {
+					var col:uint = bm.getPixel(i,j);
+					//trace(col.toString(16));
+					if (col == 0x00FF00) {
+						++green_count;
+					}
+				}
+			}
+			
+			//var bmap:Bitmap = new Bitmap(bm);
+			//map.addChild(bmap);
+			
+			if (green_count < cell_size*cell_size/2) {
+				return "water";
+			}
+			return "green";
 		}
 		
 		override public function draw( map:Sprite, cell_size:Number = 100, map_units:Sprite = null ) {

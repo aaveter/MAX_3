@@ -13,7 +13,7 @@
 		var setka:Sprite = new Sprite  ;
 		//map_size - размер карты
 		//cell - массив всех клеток карты
-		
+		var mapDrawer:MapClass = null;
 		
 
 		public function MaxMap(mapObject:MapClass)
@@ -29,7 +29,17 @@
 						
 			mapObject.draw(map, 100, map_units);
 						
+			mapDrawer = mapObject;
+			
 			initSetka(mapObject.width);
+			
+			addEventListener(MouseEvent.MOUSE_MOVE,mouse_move);
+		}
+		
+		public function mouse_move(ev:MouseEvent) {
+			if (map_units) {
+				trace(mapDrawer.cell_type(ev.localX/100, ev.localY/100, map_units, 100));
+			}
 		}
 		
 		public function initSetka(map_size:int) {
