@@ -50,30 +50,36 @@
 		
 		override public function draw( map:Sprite, cell_size:Number = 100, map_units:Sprite = null ) {
 			var col:int = 0;
-			if (ground == "green") col = 0x00FF00;
-			else if (ground == "water") col = 0x0000FF;
+			var dark_col:int = 0;
+			if (ground == "green") {
+				col = 0x00FF00;
+				dark_col = 0x00cc00;
+			} else if (ground == "water") {
+				col = 0x3333FF;
+				dark_col = 0x0000CC;
+			}
 			
-			map.graphics.beginFill(col);
+			map.graphics.beginFill(dark_col);
 			map.graphics.drawRect(0,0,width*cell_size,height*cell_size);
 			map.graphics.endFill();
 			
 			if (map_units!=null) {
-				map_units.graphics.beginFill(col-30);
+				map_units.graphics.beginFill(col);
 				map_units.graphics.drawRect(0,0,width*cell_size,height*cell_size);
 				map_units.graphics.endFill();
 			}
 			
 			for (var i:int=0; i < elements.length; i++) {
-				var ucol:int;
-				
 				if (elements[i].type=="water") {
-					ucol = 0x0000FF;
+					col = 0x3333FF;
+					dark_col = 0x0000CC;
 				} else {
-					ucol = 0x00FF00;
+					col = 0x00FF00;
+					dark_col = 0x00cc00;
 				}
 				
-				map.graphics.lineStyle(2,ucol);
-				map.graphics.beginFill(ucol);
+				map.graphics.lineStyle(2,dark_col);
+				map.graphics.beginFill(dark_col);
 				
 				var poLength:int = elements[i].points.length;
 				
@@ -82,8 +88,8 @@
 				
 				map.graphics.moveTo(poLast.x*cell_size/standart_cell_size, poLast.y*cell_size/standart_cell_size);
 				if (map_units!=null) {
-					map_units.graphics.lineStyle(2,ucol-30);
-					map_units.graphics.beginFill(ucol-30);
+					map_units.graphics.lineStyle(2,col);
+					map_units.graphics.beginFill(col);
 					map_units.graphics.moveTo(poLast.x*cell_size/standart_cell_size, poLast.y*cell_size/standart_cell_size);
 				}
 				
@@ -136,6 +142,13 @@
 				
 				map.graphics.endFill();
 				
+				map.width = width*cell_size;
+				map.height = height*cell_size;
+				
+				//if (map_units != null) {
+				//	map_units.width = width*cell_size;
+				//	map_units.height = height*cell_size;
+				//}
 				
 				/*map.graphics.lineStyle(2,0xFF0000);
 				map.graphics.beginFill(0xFF0000);
