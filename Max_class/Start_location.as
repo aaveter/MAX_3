@@ -9,6 +9,7 @@
 	import Max_class.MaxMiniMap;
 	import Max_class.MaxMap;
 	import Units.*;
+	import flash.text.TextField;
 
 	public class Start_location
 	{
@@ -21,9 +22,8 @@
 		public function Start_location(kadr:Sprite,map:Sprite,mini_map:MaxMiniMap,m:MaxMap,scr:Scroll_menu)
 		{
 			//Создаем затенение на все и кнопку с текстом кто выбирает локацию.
-			var player:int = 0;
 			var pl:int = 0;
-			str = Game.Players[player].name;
+			str = Game.Players[Game.player].name;
 			next_player();
 			map.addEventListener(MouseEvent.MOUSE_DOWN,mp_down);
 			mc.mouseEnabled = false;
@@ -67,25 +67,25 @@
 				Math.ceil(map.mouseY / Game.cell_size) > Game.pd &&
 				Math.ceil(map.mouseY / Game.cell_size) < map.height - Game.pd)
 				{
-					Game.Players[player].sl.x = Math.ceil(map.mouseX / Game.cell_size);
-					Game.Players[player].sl.y = Math.ceil(map.mouseY / Game.cell_size);
+					Game.Players[Game.player].sl.x = Math.ceil(map.mouseX / Game.cell_size);
+					Game.Players[Game.player].sl.y = Math.ceil(map.mouseY / Game.cell_size);
 					for (pl = 0; pl < Game.Players.length; pl++)
 					{
-						if (player != pl)
+						if (Game.player != pl)
 						{
-							if (Math.abs(Game.Players[player].sl.x - Game.Players[pl].sl.x) <= Game.pd && Math.abs(Game.Players[player].sl.y - Game.Players[pl].sl.y) <= Game.pd)
+							if (Math.abs(Game.Players[Game.player].sl.x - Game.Players[pl].sl.x) <= Game.pd && Math.abs(Game.Players[Game.player].sl.y - Game.Players[pl].sl.y) <= Game.pd)
 							{
 								str = "Вы выбрали одно место с другим игроком";
 								create_error_text();
-								Game.Players[player].sl.x = 0;//Использую как переменную для проверки переходим ли к след. игроку.
-								Game.Players[player].sl.y = 0;
+								Game.Players[Game.player].sl.x = 0;//Использую как переменную для проверки переходим ли к след. игроку.
+								Game.Players[Game.player].sl.y = 0;
 								break;
 							}
 						}
 					}
-					if (Game.Players[player].sl.x != 0)
+					if (Game.Players[Game.player].sl.x != 0)
 					{
-						for (pl = player; pl < Game.Players.length; pl++)
+						for (pl = Game.player; pl < Game.Players.length; pl++)
 						{
 							if (Game.Players[pl].sl.x == 0)
 							{
@@ -94,7 +94,7 @@
 						}
 						if (pl == Game.Players.length)
 						{
-							for (pl = 0; pl < player; pl++)
+							for (pl = 0; pl < Game.player; pl++)
 							{
 								if (Game.Players[pl].sl.x == 0)
 								{
@@ -118,22 +118,22 @@
 				var cl:MovieClip = new round_class  ;
 				cl.width = Game.cell_size;
 				cl.height = Game.cell_size;
-				cl.x = (Game.Players[player].sl.x - 0.5) * Game.cell_size;
-				cl.y = (Game.Players[player].sl.y - 0.5) * Game.cell_size;
+				cl.x = (Game.Players[Game.player].sl.x - 0.5) * Game.cell_size;
+				cl.y = (Game.Players[Game.player].sl.y - 0.5) * Game.cell_size;
 				map.addChild(cl);
 				var cl_time:Timer = new Timer(500,1);
 				cl_time.start();
 				map.removeEventListener(MouseEvent.MOUSE_DOWN,mp_down);
-				if (pl != player)
+				if (pl != Game.player)
 				{
 					cl_time.addEventListener(TimerEvent.TIMER_COMPLETE,cl_complete1);
 					function cl_complete1(event:TimerEvent)
 					{
 						map.removeChild(cl);
-						player = pl - 1;
+						Game.player = pl - 1;
 						base_position();
-						player +=  1;
-						str = Game.Players[player]["name"];
+						Game.player +=  1;
+						str = Game.Players[Game.player]["name"];
 						next_player();
 						map.addEventListener(MouseEvent.MOUSE_DOWN,mp_down);
 					}
@@ -156,7 +156,7 @@
 							Game.mini_scan_zone.removeChildAt(Game.mini_scan_zone.numChildren - 1);
 						}
 						Game.step = 1;
-						player = 0;
+						Game.player = 0;
 						next_step();
 					}
 				}
@@ -169,58 +169,66 @@
 				mini_map.mini_map_units.addChild(Game.mini_scan_zone);
 				m.map_units.mask = Game.scan_zone;
 				mini_map.mini_map_units.mask = Game.mini_scan_zone;
-				for (player = 0; player < Game.Players.length; player++)
+				for (Game.player = 0; Game.player < Game.Players.length; Game.player++)
 				{
-					Game.Players[player].units[0] = new ingener  ;
-					Game.Players[player].units[0].create_unit(m,mini_map,Game.Players[player].sl.x,Game.Players[player].sl.y,Game.Players[player].color,Game.mini_cs);
-					Game.Players[player].units[1] = new construct  ;
-					Game.Players[player].units[1].create_unit(m,mini_map,Game.Players[player].sl.x + 1,Game.Players[player].sl.y,Game.Players[player].color,Game.mini_cs);
-					Game.Players[player].units[2] = new scout  ;
-					Game.Players[player].units[2].create_unit(m,mini_map,Game.Players[player].sl.x + 1,Game.Players[player].sl.y + 1,Game.Players[player].color,Game.mini_cs);
+					Game.Players[Game.player].units[0] = new ingener  ;
+					Game.Players[Game.player].units[0].create_unit(m,mini_map,Game.Players[Game.player].sl.x,Game.Players[Game.player].sl.y,Game.Players[Game.player].color,Game.mini_cs);
+					Game.Players[Game.player].units[1] = new construct  ;
+					Game.Players[Game.player].units[1].create_unit(m,mini_map,Game.Players[Game.player].sl.x + 1,Game.Players[Game.player].sl.y,Game.Players[Game.player].color,Game.mini_cs);
+					Game.Players[Game.player].units[2] = new scout  ;
+					Game.Players[Game.player].units[2].create_unit(m,mini_map,Game.Players[Game.player].sl.x + 1,Game.Players[Game.player].sl.y + 1,Game.Players[Game.player].color,Game.mini_cs);
 				}
 				var NSB:Button_press = new Button_press(Formats.Static,"Следующий ход");//Кнопка для следующего хода
 				kadr.addChild(NSB);
 				NSB.x = 5;
-				NSB.y = 150;
+				NSB.y = 120;
 				NSB.addEventListener(MouseEvent.CLICK,NSB_func);
 				function NSB_func(ev:MouseEvent)
 				{
-					player +=  1;
-					if (player < Game.Players.length)
+					for (var i = 0; i<Game.Players[Game.player].units.length; i++)
 					{
-						next_step();
+						Game.Players[Game.player].units[i].deselect();
 					}
-					else if (player == Game.Players.length)
+					Game.player +=  1;
+					if (Game.player == Game.Players.length)
 					{
 						Game.step +=  1;
-						player = 0;
-						next_step();
+						Game.player = 0;
 					}
+					next_step();
 				}
+				Game.unit_TF.x = 5;
+				Game.unit_TF.y = 190;
+				kadr.addChild(Game.unit_TF);
 			}
 
 			//Функция по выводу текста с номером хода и именем ходящего игрока;
 			function next_step()
 			{
-				str = "Ход " + Game.step + " " + Game.Players[player].name;
+				str = "Ход " + Game.step + " " + Game.Players[Game.player].name;
 				base_position();
 				next_player();
-				BP.addEventListener(MouseEvent.CLICK,next_zone);
-			}
-			function next_zone(event:MouseEvent)
-			{
-				base_position(Game.Players[player].sl.x,Game.Players[player].sl.y);
 				//Удаляю предидущую зону сканирования
 				while (Game.scan_zone.numChildren != 0)
 				{
 					Game.scan_zone.removeChildAt(Game.scan_zone.numChildren - 1);
 					Game.mini_scan_zone.removeChildAt(Game.mini_scan_zone.numChildren - 1);
 				}
+				BP.addEventListener(MouseEvent.CLICK,next_zone);
+			}
+			function next_zone(event:MouseEvent)
+			{
+				base_position(Game.Players[Game.player].sl.x,Game.Players[Game.player].sl.y);
 				//Теперь перебираем сканы всех юнитов и создаем области видимости с помощью mask;
-				for (var pu = 0; pu < Game.Players[player].units.length; pu++)
+				for (var pu = 0; pu < Game.Players[Game.player].units.length; pu++)
 				{
-					Game.scan_zone.addChild(Game.Players[player].units[pu].scan_area);
-					Game.mini_scan_zone.addChild(Game.Players[player].units[pu].mini_scan_area);
+					Game.scan_zone.addChild(Game.Players[Game.player].units[pu].scan_area);
+					Game.mini_scan_zone.addChild(Game.Players[Game.player].units[pu].mini_scan_area);
+					Game.Players[Game.player].units[pu].cur_speed +=  Game.Players[Game.player].units[pu].speed;
+					if (Game.Players[Game.player].units[pu].cur_speed > Game.Players[Game.player].units[pu].speed)
+					{
+						Game.Players[Game.player].units[pu].cur_speed = Game.Players[Game.player].units[pu].speed;
+					}
 				}
 			}
 			//Функция по выводу на экран текста с ошибкой

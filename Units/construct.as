@@ -7,7 +7,13 @@
 	{
 		public function construct()
 		{			
-			addChild(new construct_bmp)
+			var bmp:Bitmap=new Bitmap(new constructor_bmd)			
+			bmp.width = 60
+			bmp.height = bmp.width
+			bmp.x=-bmp.width/2
+			bmp.y=-bmp.height/2			
+			addChild(bmp)
+			
 			unit_name = "Конструктор";//Наименование юнита
 			hp = 18;//Кол-во жизней юнита
 			armor = 4;//Броня юнита уменьшает наносимый урон

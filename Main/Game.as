@@ -8,6 +8,7 @@
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.display.StageQuality;
+	import flash.text.TextField
 
 	public class Game extends Sprite
 	{
@@ -22,11 +23,16 @@
 		public static var doc_x:int = 100;//Размер документа по x
 		public static var doc_y:int = 100;//Размер документа по y		
 		public static var Players:Array=new Array()//Массив игроков, построенныех на классе Player
+		public static var player:int = new int()//Указывает игрока чей сейчас ход и т.д.
 		public static var step:int = 0;//Указывает номер хода в игре
-		public static var stage_:Stage = null; // ссылка на сцену		
+		public static var stage_:Stage = null; // ссылка на сцену	
+		public static var unit_TF:TextField= new TextField() //Сюда будет выводиться вся информация по выбранному юниту
+		public static var selected_unit:unit_class //Выбранный юнит
+		unit_TF.border=true		
+		unit_TF.background=true
 		
 		private static var kadr_:Sprite = null; // ссылка на текущий кадр
-		private static var game_:Game = null; // ссылка на себя саму
+		private static var game_:Game = null; // ссылка на себя саму		
 		
 		public static const map_x:int = 250;//Карта сдвинаута по x
 		public static const map_y:int = 0;//Карта сдвинаута по y

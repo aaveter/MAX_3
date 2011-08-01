@@ -6,8 +6,12 @@
 	public class ingener extends unit_class
 	{
 		public function ingener()
-		{
-			bmp = new ingener_bmp
+		{				
+			var bmp:Bitmap=new Bitmap(new ingener_bmd)			
+			bmp.width = 60
+			bmp.height = bmp.width
+			bmp.x=-bmp.width/2
+			bmp.y=-bmp.height/2			
 			addChild(bmp)
 			
 			unit_name = "Инженер";//Наименование юнита

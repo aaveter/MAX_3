@@ -38,7 +38,7 @@
 		
 		public function mouse_move(ev:MouseEvent) {
 			if (map_units) {
-				trace(mapDrawer.cell_type(ev.localX/100, ev.localY/100, map_units, 100));
+				//trace(mapDrawer.cell_type(ev.localX/100, ev.localY/100, map_units, 100));
 			}
 		}
 		
